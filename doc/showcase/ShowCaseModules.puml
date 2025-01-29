@@ -1,0 +1,19 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+User -> (app) : action
+(app) -> User : refresh
+
+(app) -> (ViewModel) : action
+(ViewModel) -> (app) : event
+
+(Common) ..> (app) : include
+(Common) ..> (ViewModel) : include
+
+(app) <.. (UI) : include
+(app) <.. (Video) : include
+(UI) <.. (Utilities) : include
+(Video) <.. (Utilities) : include
+(ViewModel) <.. (Video) : include
+
+@enduml
