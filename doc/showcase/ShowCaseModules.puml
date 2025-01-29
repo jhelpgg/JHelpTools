@@ -5,7 +5,7 @@ User -> (app) : action
 (app) -> User : refresh
 
 (app) -> (ViewModel) : action
-(ViewModel) -> (app) : event
+(ViewModel) -> (app) : status
 
 (Common) ..> (app) : include
 (Common) ..> (ViewModel) : include
