@@ -23,3 +23,5 @@ rootProject.name = "JHelpTools"
 include(":app")
 include(":Utilities")
 include(":UI")
+include(":ViewModel")
+include(":Common")

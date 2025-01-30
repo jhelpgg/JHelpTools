@@ -2,50 +2,37 @@ package fr.jhelp.tools
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import fr.jhelp.tools.ui.composables.MainScreenComposable
 import fr.jhelp.tools.ui.theme.JHelpToolsTheme
+import fr.jhelp.tools.utilities.coroutine.whenValueMatchDo
+import fr.jhelp.tools.utilities.injector.injected
+import fr.jhelp.tools.viewmodel.action.navigation.NavigationBack
+import fr.jhelp.tools.viewmodel.shared.NavigationModel
+import fr.jhelp.tools.viewmodel.shared.Screen
+import kotlinx.coroutines.flow.filter
 
 class MainActivity : ComponentActivity()
 {
+    private val navigationModel by injected<NavigationModel>()
+    private val mainScreenComposable = MainScreenComposable()
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             JHelpToolsTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                            )
-                }
+                this.mainScreenComposable.Show(Modifier.fillMaxSize())
             }
         }
+
+        this.onBackPressedDispatcher.addCallback { this@MainActivity.navigationModel.action(NavigationBack) }
+        this.navigationModel.status.whenValueMatchDo({ status -> status.currentScreen == Screen.EXIT }) { _ -> this.finish() }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier)
-{
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-        )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview()
-{
-    JHelpToolsTheme {
-        Greeting("Android")
-    }
-}
