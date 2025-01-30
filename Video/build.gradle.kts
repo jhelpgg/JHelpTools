@@ -33,6 +33,7 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.exoplayer)
     implementation(libs.material)
     api(project(":Utilities"))
     testImplementation(libs.junit)

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
@@ -12,8 +13,8 @@
             <option value="$PROJECT_DIR$/Common" />
             <option value="$PROJECT_DIR$/UI" />
             <option value="$PROJECT_DIR$/Utilities" />
-            <option value="$PROJECT_DIR$/ViewModel" />
             <option value="$PROJECT_DIR$/Video" />
+            <option value="$PROJECT_DIR$/ViewModel" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>
