@@ -1,6 +1,9 @@
 package fr.jhelp.tools.utilities.source
 
+import android.content.Context
+import android.content.res.AssetManager
 import android.net.Uri
+import fr.jhelp.tools.utilities.injector.injected
 
 /**
  * Source of a file stored in assets

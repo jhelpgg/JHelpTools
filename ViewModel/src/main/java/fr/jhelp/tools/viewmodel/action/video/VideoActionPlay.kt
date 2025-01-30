@@ -1,5 +1,5 @@
 package fr.jhelp.tools.viewmodel.action.video
 
-import fr.jhelp.tools.video.capture.Video
+import fr.jhelp.tools.utilities.source.Source
 
-class VideoActionPlay(val video: Video) : VideoAction
+class VideoActionPlay(val video: Source) : VideoAction

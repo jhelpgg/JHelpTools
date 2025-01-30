@@ -1,5 +1,6 @@
 package fr.jhelp.tools.viewmodel.implementation
 
+import android.util.Log
 import fr.jhelp.tools.viewmodel.action.main.MainApplicationAction
 import fr.jhelp.tools.viewmodel.shared.MainApplicationModel
 import fr.jhelp.tools.viewmodel.status.MainApplicationStatus
@@ -14,6 +15,11 @@ internal class MainApplicationImplementation : MainApplicationModel
 
     override fun action(action: MainApplicationAction)
     {
+        if(this.statusMutable.value == MainApplicationStatus.EXIT)
+        {
+            return
+        }
+
         when(action)
         {
             MainApplicationAction.PAUSE -> this.statusMutable.value = MainApplicationStatus.PAUSE
