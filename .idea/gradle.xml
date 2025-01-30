@@ -10,8 +10,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/Common" />
             <option value="$PROJECT_DIR$/UI" />
             <option value="$PROJECT_DIR$/Utilities" />
+            <option value="$PROJECT_DIR$/ViewModel" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>
