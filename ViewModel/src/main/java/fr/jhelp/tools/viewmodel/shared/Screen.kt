@@ -6,5 +6,6 @@ package fr.jhelp.tools.viewmodel.shared
 enum class Screen
 {
     FEATURES_LIST,
+    VIDEO,
     EXIT
 }
