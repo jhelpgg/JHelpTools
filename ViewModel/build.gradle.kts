@@ -37,6 +37,7 @@ dependencies {
 
     api(project(":Utilities"))
     implementation(project(":Common"))
+    implementation(project(":Video"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
