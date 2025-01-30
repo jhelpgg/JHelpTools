@@ -1,4 +1,4 @@
-package fr.jhelp.tools.utilities
+package fr.jhelp.tools.common
 
 import org.junit.Test
 
