@@ -48,7 +48,7 @@ class VideoCapture private constructor(val source: Source, width: ElementSize, h
 
     private val closedStatus = AtomicBoolean(false)
     private val context: Context by injected<Context>()
-    private val exoPlayer: ExoPlayer = this.createExoPlayer(width, height)
+    private val exoPlayer: ExoPlayer = this.createExoPlayer()
     private val mediaMetadataRetriever = this.createMediaMetadataRetriever(width, height)
 
     /**
@@ -167,7 +167,7 @@ class VideoCapture private constructor(val source: Source, width: ElementSize, h
     }
 
     @SuppressLint("UnsafeOptInUsageError")
-    private fun createExoPlayer(width: ElementSize, height: ElementSize): ExoPlayer
+    private fun createExoPlayer(): ExoPlayer
     {
         val exoPlayer = ExoPlayer.Builder(this.context).build()
         runBlocking {

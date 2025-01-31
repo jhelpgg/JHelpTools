@@ -1,14 +1,9 @@
 package fr.jhelp.tools.viewmodel.implementation
 
-import android.graphics.Bitmap
-import android.os.SystemClock
-import android.util.Log
-import fr.jhelp.tools.utilities.coroutine.Locker
-import fr.jhelp.tools.utilities.coroutine.onFailure
-import fr.jhelp.tools.utilities.coroutine.onSuccess
 import fr.jhelp.tools.utilities.injector.injected
 import fr.jhelp.tools.utilities.source.Source
-import fr.jhelp.tools.video.capture.VideoCapture
+import fr.jhelp.tools.video.capture.VideoCaptureManager
+import fr.jhelp.tools.video.capture.information.VideoInformationNoVideo
 import fr.jhelp.tools.viewmodel.action.video.VideoAction
 import fr.jhelp.tools.viewmodel.action.video.VideoActionCapture
 import fr.jhelp.tools.viewmodel.action.video.VideoActionPlay
@@ -22,25 +17,19 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
-import kotlin.math.max
 
 internal class VideoImplementation : VideoModel
 {
     private val mainApplicationModel: MainApplicationModel by injected<MainApplicationModel>()
     private val statusMutable = MutableStateFlow<VideoStatus>(VideoStatus.IDLE)
     private var jobApplication: Job? = null
-    private var videoCapture: VideoCapture? = null
-    private var capture: (Bitmap) -> Unit = {}
-    private var startTime: Long = 0L
-    private var totalTime = 0L
-    private var jobPlaying: Job? = null
-    private val locker = Locker()
-    private var paused = false
+    private var jobVideoInformation: Job? = null
+    private val videoCaptureManager = VideoCaptureManager.create()
     override val status: StateFlow<VideoStatus> = this.statusMutable.asStateFlow()
 
     init
@@ -54,10 +43,20 @@ internal class VideoImplementation : VideoModel
                     MainApplicationStatus.EXIT   ->
                     {
                         this@VideoImplementation.jobApplication?.cancel("Exit")
-                        this@VideoImplementation.videoCapture?.close()
+                        this@VideoImplementation.jobVideoInformation?.cancel("Exit")
+                        this@VideoImplementation.videoCaptureManager.close()
                     }
 
                     MainApplicationStatus.IDLE   -> Unit
+                }
+            }
+        }
+
+        this.jobVideoInformation = CoroutineScope(Dispatchers.Default).launch {
+            this@VideoImplementation.videoCaptureManager.videoInformation.filter { videoInformation -> videoInformation is VideoInformationNoVideo }.collect { videoInformation ->
+                if (this@VideoImplementation.statusMutable.value != VideoStatus.IDLE)
+                {
+                    this@VideoImplementation.statusMutable.value = VideoStatus.STOPPED
                 }
             }
         }
@@ -67,7 +66,7 @@ internal class VideoImplementation : VideoModel
     {
         when (action)
         {
-            is VideoActionCapture -> this.capture = action.capture
+            is VideoActionCapture -> this.videoCaptureManager.capture = action.capture
             is VideoActionPlay    -> this.play(action.video)
             VideoActionStop       -> this.pause(false)
             VideoActionPlayAgain  -> this.resume()
@@ -76,18 +75,9 @@ internal class VideoImplementation : VideoModel
 
     private fun play(video: Source)
     {
-        this.jobPlaying?.cancel("Play")
-        this.videoCapture?.close()
-        val deferred = VideoCapture.create(video)
-        deferred.onFailure { exception -> exception.printStackTrace() }
-        deferred.onSuccess { videoCapture ->
-            this.videoCapture = videoCapture
-            this.statusMutable.value = VideoStatus.PLAYING
-            this.startTime = System.currentTimeMillis()
-            this.totalTime = videoCapture.videoDuration
-            this.jobPlaying = CoroutineScope(Dispatchers.Default).launch {
-                this@VideoImplementation.playing()
-            }
+        this.videoCaptureManager.play(video) { result ->
+            result.onSuccess { this.statusMutable.value = VideoStatus.PLAYING }
+                .onFailure { exception -> exception.printStackTrace() }
         }
     }
 
@@ -95,7 +85,16 @@ internal class VideoImplementation : VideoModel
     {
         if (this.statusMutable.value == VideoStatus.PLAYING)
         {
-            this.paused = paused
+
+            if (paused)
+            {
+                this.videoCaptureManager.pause()
+            }
+            else
+            {
+                this.videoCaptureManager.stop()
+            }
+
             this.statusMutable.value = VideoStatus.PAUSED
         }
     }
@@ -105,36 +104,7 @@ internal class VideoImplementation : VideoModel
         if (this.statusMutable.value == VideoStatus.PAUSED)
         {
             this.statusMutable.value = VideoStatus.PLAYING
-            this.locker.unlock()
+            this.videoCaptureManager.resume()
         }
-    }
-
-    private suspend fun playing()
-    {
-        var time = System.currentTimeMillis() - this.startTime
-        this.videoCapture?.play()
-
-        while (time <= this.totalTime)
-        {
-            val tick = SystemClock.elapsedRealtime()
-            this.videoCapture?.imageAtTime(time)?.let { image ->
-                this.capture(image)
-            }
-            val wait = max(1L, 40L + tick - SystemClock.elapsedRealtime())
-
-            if (this.statusMutable.value == VideoStatus.PAUSED)
-            {
-                this.videoCapture?.pause()
-                this.locker.lock()
-                this.videoCapture?.play()
-                this.startTime = System.currentTimeMillis() - if (this.paused) time else 0L
-            }
-
-            delay(wait)
-            time = System.currentTimeMillis() - this.startTime
-        }
-
-        this.statusMutable.value = VideoStatus.STOPPED
-        this.jobPlaying?.cancel("Finished")
     }
 }
