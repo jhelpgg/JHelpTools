@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(project(":UI"))
     implementation(project(":Common"))
+    implementation(project(":Video"))
     implementation(project(":ViewModel"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
