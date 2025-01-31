@@ -11,7 +11,6 @@ val Screen.description: FeatureDescription?
             Screen.FEATURES_LIST, Screen.EXIT -> null
         }
 
-// TODO
-private val videoDescription =  FeatureDescription(title = R.string.features_list_title,
-                                                   description = R.string.app_name,
-                                                   icon = R.drawable.default_screen)
+private val videoDescription =  FeatureDescription(title = R.string.features_list_item_video_title,
+                                                   description = R.string.features_list_item_video_description,
+                                                   icon = R.drawable.video_icon)

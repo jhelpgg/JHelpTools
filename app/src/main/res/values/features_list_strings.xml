@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="features_list_title">Features list</string>
+
+    <string name="features_list_item_video_title">Capture video images</string>
+    <string name="features_list_item_video_description">Show images captured inside the video</string>
 </resources>
