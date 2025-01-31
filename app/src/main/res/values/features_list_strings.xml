@@ -4,4 +4,7 @@
 
     <string name="features_list_item_video_title">Capture video images</string>
     <string name="features_list_item_video_description">Show images captured inside the video</string>
+
+    <string name="features_list_item_engine_3d_title">Engine 3D : Hello word</string>
+    <string name="features_list_item_engine_3d_description">Show engine 3D hello world</string>
 </resources>

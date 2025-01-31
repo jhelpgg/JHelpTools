@@ -2,7 +2,7 @@ package fr.jhelp.tools.ui.composables.features
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +23,8 @@ import fr.jhelp.tools.ui.theme.Typography
 @Composable
 fun FeatureItemComposable(featureDescription: FeatureDescription, clickAction: () -> Unit)
 {
-    Card(onClick = clickAction) {
+    Card(onClick = clickAction,
+         modifier = Modifier.padding(top = SPACE_SMALL)) {
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
             val (icon, title, description) = createRefs()
 
