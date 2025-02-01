@@ -51,6 +51,7 @@ dependencies {
     implementation(project(":Common"))
     implementation(project(":Video"))
     implementation(project(":ViewModel"))
+    implementation(project(":Engine3D"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
