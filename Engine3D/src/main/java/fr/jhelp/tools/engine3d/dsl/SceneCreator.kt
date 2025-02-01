@@ -4,6 +4,7 @@ import fr.jhelp.tools.engine3d.scene.Color3D
 import fr.jhelp.tools.engine3d.scene.Position3D
 import fr.jhelp.tools.engine3d.scene.Scene3D
 import fr.jhelp.tools.engine3d.view.View3D
+import fr.jhelp.tools.engine3d.view.touch.View3DTouchAction
 
 /**
  * Create a 3D scene
@@ -38,5 +39,4 @@ class SceneCreator internal constructor(val view3D: View3D)
     {
         this.scene3D.root.children(nodeTree)
     }
-
 }

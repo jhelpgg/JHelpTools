@@ -11,9 +11,9 @@ User -> (app) : action
 (Common) ..> (ViewModel) : include
 
 (app) <.. (UI) : include
-(app) <.. (Video) : include
+(app) <.. (Feature) : include
 (UI) <.. (Utilities) : include
-(Video) <.. (Utilities) : include
-(ViewModel) <.. (Video) : include
+(Feature) <.. (Utilities) : include
+(ViewModel) <.. (Feature) : include
 
 @enduml
