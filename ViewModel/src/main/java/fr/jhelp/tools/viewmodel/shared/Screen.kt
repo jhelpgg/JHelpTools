@@ -8,5 +8,6 @@ enum class Screen
     FEATURES_LIST,
     VIDEO,
     ENGINE3D,
+    COLORING,
     EXIT
 }
