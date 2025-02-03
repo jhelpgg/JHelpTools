@@ -18,6 +18,10 @@ import fr.jhelp.tools.utilities.image.fitSpace
 import fr.jhelp.tools.utilities.image.green
 import fr.jhelp.tools.utilities.image.red
 import fr.jhelp.tools.utilities.source.Source
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.max
 
@@ -41,8 +45,11 @@ class ColoringView(context: Context, attributeSet: AttributeSet? = null) : View(
 
     fun image(source: Source)
     {
-        this.image.fitSpace(BitmapFactory.decodeStream(source.inputStream()))
-        this.postInvalidate()
+        CoroutineScope(Dispatchers.Default).launch {
+            delay(1024)
+            this@ColoringView.image.fitSpace(BitmapFactory.decodeStream(source.inputStream()))
+            this@ColoringView.postInvalidate()
+        }
     }
 
     /**
@@ -80,8 +87,6 @@ class ColoringView(context: Context, attributeSet: AttributeSet? = null) : View(
 
         this.image.coloringAreaFromPointWithColorAnimated(x, y, this.color, this.precision, this.refreshRate) { finished ->
             this.postInvalidate()
-
-            Log.d("ColoringView", "Coloring finished : $finished")
 
             if (finished)
             {
