@@ -9,6 +9,7 @@ val Screen.description: FeatureDescription?
         {
             Screen.VIDEO                      -> videoDescription
             Screen.ENGINE3D                   -> engine3DDescription
+            Screen.COLORING                   -> coloringDescription
             Screen.FEATURES_LIST, Screen.EXIT -> null
         }
 
@@ -18,3 +19,6 @@ private val videoDescription = FeatureDescription(title = R.string.features_list
 
 private val engine3DDescription = FeatureDescription(title = R.string.features_list_item_engine_3d_title,
                                                      description = R.string.features_list_item_engine_3d_description)
+
+private val coloringDescription = FeatureDescription(title = R.string.features_list_item_coloring_title,
+                                                     description = R.string.features_list_item_coloring_description)
