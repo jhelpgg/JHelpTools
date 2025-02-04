@@ -508,6 +508,18 @@ fun Bitmap.fitSpace(bitmap: Bitmap)
     canvas.fitRectangle(bitmap, 0, 0, this.width, this.height)
 }
 
+private const val addLastLeft = 0b0001
+private const val addLastRight = 0b0010
+private const val addLastUp = 0b0100
+private const val addLastDown = 0b1000
+private const val addLastAll = addLastLeft or addLastRight or addLastUp or addLastDown
+private const val addLastUpRight = addLastUp or addLastRight
+private const val addLastUpLeft = addLastUp or addLastLeft
+private const val addLastDownRight = addLastDown or addLastRight
+private const val addLastDownLeft = addLastDown or addLastLeft
+
+private data class PixelInfo(val x: Int, val y: Int, val pixel: Int, val addLast: Int)
+
 /**
  * Color a bitmap from a given position
  * @param x X position
@@ -546,14 +558,19 @@ fun Bitmap.coloringAreaFromPointWithColorAnimated(x: Int, y: Int, color: Int, pr
             return@launch
         }
 
-        // x, y, pixel
-        val stack = ArrayDeque<Triple<Int, Int, Int>>()
-        stack.addFirst(Triple(x, y, x + y * width))
+        val stack = ArrayDeque<PixelInfo>()
+        stack.addLast(PixelInfo(x, y, x + y * width, addLastAll))
         var count = 0
 
         while (stack.isNotEmpty())
         {
-            val (xx, yy, pixel) = stack.removeFirst()
+            val (xx, yy, pixel, addLast) = stack.removeFirst()
+
+            if (same(pixels[pixel], colorOnBitmap).not())
+            {
+                continue
+            }
+
             pixels[pixel] = color
 
             count++
@@ -567,22 +584,50 @@ fun Bitmap.coloringAreaFromPointWithColorAnimated(x: Int, y: Int, color: Int, pr
 
             if (xx > 0 && same(pixels[pixel - 1], colorOnBitmap))
             {
-                stack.addFirst(Triple(xx - 1, yy, pixel - 1))
+                if (addLast and addLastLeft != 0)
+                {
+                    stack.addLast(PixelInfo(xx - 1, yy, pixel - 1, addLastUpLeft))
+                }
+                else
+                {
+                    stack.addFirst(PixelInfo(xx - 1, yy, pixel - 1, addLastUpLeft))
+                }
             }
 
             if (xx < width - 1 && same(pixels[pixel + 1], colorOnBitmap))
             {
-                stack.addFirst(Triple(xx + 1, yy, pixel + 1))
+                if (addLast and addLastRight != 0)
+                {
+                    stack.addLast(PixelInfo(xx + 1, yy, pixel + 1, addLastDownRight))
+                }
+                else
+                {
+                    stack.addFirst(PixelInfo(xx + 1, yy, pixel + 1, addLastDownRight))
+                }
             }
 
             if (yy > 0 && same(pixels[pixel - width], colorOnBitmap))
             {
-                stack.addFirst(Triple(xx, yy - 1, pixel - width))
+                if (addLast and addLastUp != 0)
+                {
+                    stack.addLast(PixelInfo(xx, yy - 1, pixel - width, addLastUpRight))
+                }
+                else
+                {
+                    stack.addFirst(PixelInfo(xx, yy - 1, pixel - width, addLastUpRight))
+                }
             }
 
             if (yy < height - 1 && same(pixels[pixel + width], colorOnBitmap))
             {
-                stack.addFirst(Triple(xx, yy + 1, pixel + width))
+                if (addLast and addLastDown != 0)
+                {
+                    stack.addLast(PixelInfo(xx, yy + 1, pixel + width, addLastDownLeft))
+                }
+                else
+                {
+                    stack.addFirst(PixelInfo(xx, yy + 1, pixel + width, addLastDownLeft))
+                }
             }
         }
 
