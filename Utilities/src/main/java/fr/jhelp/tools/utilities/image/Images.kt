@@ -3,7 +3,12 @@ package fr.jhelp.tools.utilities.image
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
+import fr.jhelp.tools.utilities.checkArgument
 import fr.jhelp.tools.utilities.math.bounds
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -290,7 +295,6 @@ fun Bitmap.copy(bitmap: Bitmap)
 fun Bitmap.copy(): Bitmap =
     this.copy(Bitmap.Config.ARGB_8888, true)
 
-
 /**
  * Make the bitmap mutable.
  *
@@ -502,6 +506,89 @@ fun Bitmap.fitSpace(bitmap: Bitmap)
 {
     val canvas = Canvas(this)
     canvas.fitRectangle(bitmap, 0, 0, this.width, this.height)
+}
+
+/**
+ * Color a bitmap from a given position
+ * @param x X position
+ * @param y Y position
+ * @param color Color to apply
+ * @param precision Precision to choose what means same color
+ * @param refreshFrequency Frequency to refresh bitmap (number of pixels colored between each refresh callback
+ * @param refresh Callback to refresh bitmap. It takes a boolean in parameter to indicates if the coloring is finished
+ * @throws IllegalArgumentException If the point is out of the bitmap or precision is negative or zero
+ */
+@Throws(IllegalArgumentException::class)
+fun Bitmap.coloringAreaFromPointWithColorAnimated(x: Int, y: Int, color: Int, precision: Int = 1, refreshFrequency: Int = 16384, refresh: (Boolean) -> Unit = {})
+{
+    (x >= 0 && x < this.width && y >= 0 && y < this.height).checkArgument("The point ($x, $y) is out of the bitmap ${this.width}x${this.height}")
+
+    (precision > 0).checkArgument("The precision must be greater than 0")
+
+    val pixels = IntArray(this.width * this.height)
+    this.getPixels(pixels, 0, this.width, 0, 0, this.width, this.height)
+    val bitmap = this
+    val width = this.width
+    val height = this.height
+    val same: (color1: Int, color2: Int) -> Boolean =
+        { color1, color2 ->
+            abs(color1.red - color2.red) <= precision
+                    && abs(color1.green - color2.green) <= precision
+                    && abs(color1.blue - color2.blue) <= precision
+        }
+
+    CoroutineScope(Dispatchers.Default).launch {
+        val colorOnBitmap = pixels[x + y * width]
+
+        if (same(color, colorOnBitmap))
+        {
+            refresh(true)
+            return@launch
+        }
+
+        // x, y, pixel
+        val stack = ArrayDeque<Triple<Int, Int, Int>>()
+        stack.addFirst(Triple(x, y, x + y * width))
+        var count = 0
+
+        while (stack.isNotEmpty())
+        {
+            val (xx, yy, pixel) = stack.removeFirst()
+            pixels[pixel] = color
+
+            count++
+
+            if (count >= refreshFrequency)
+            {
+                bitmap.setPixels(pixels, 0, width, 0, 0, width, height)
+                refresh(false)
+                count = 0
+            }
+
+            if (xx > 0 && same(pixels[pixel - 1], colorOnBitmap))
+            {
+                stack.addFirst(Triple(xx - 1, yy, pixel - 1))
+            }
+
+            if (xx < width - 1 && same(pixels[pixel + 1], colorOnBitmap))
+            {
+                stack.addFirst(Triple(xx + 1, yy, pixel + 1))
+            }
+
+            if (yy > 0 && same(pixels[pixel - width], colorOnBitmap))
+            {
+                stack.addFirst(Triple(xx, yy - 1, pixel - width))
+            }
+
+            if (yy < height - 1 && same(pixels[pixel + width], colorOnBitmap))
+            {
+                stack.addFirst(Triple(xx, yy + 1, pixel + width))
+            }
+        }
+
+        bitmap.setPixels(pixels, 0, width, 0, 0, width, height)
+        refresh(true)
+    }
 }
 
 /**
