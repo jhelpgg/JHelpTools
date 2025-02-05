@@ -10,6 +10,7 @@ import kotlin.math.sqrt
 
 /** PI in float precision */
 const val PI_FLOAT: Float = PI.toFloat()
+const val TWO_PI_FLOAT: Float = (2.0 * PI).toFloat()
 
 /** E in float precision */
 const val E_FLOAT: Float = E.toFloat()
@@ -38,7 +39,7 @@ fun log2(integer: Int): Int =
     if (integer <= 1) 0
     else floor(kotlin.math.log2(integer.toDouble())).toInt()
 
-fun square(float:Float): Float = float * float
+fun square(float: Float): Float = float * float
 
 /**
  * Distance between two points
@@ -63,6 +64,7 @@ fun distance(x1: Float, y1: Float, x2: Float, y2: Float): Float =
  */
 fun distance(x1: Float, y1: Float, z1: Float, x2: Float, y2: Float, z2: Float): Float =
     sqrt(square(x1 - x2) + square(y1 - y2) + square(z1 - z2))
+
 /**
  * Compute the modulo of a real
  *
@@ -271,3 +273,109 @@ fun gradeToDegree(grade: Float): Float = grade / 0.9f
  * Convert grade to radian
  */
 fun gradeToRadian(grade: Float): Float = grade * PI_FLOAT / 200.0f
+/**
+ * Compute the quadratic interpolation
+ *
+ * @param cp Start value
+ * @param p1 First control point
+ * @param p2 Second control point
+ * @param t  Factor in [0, 1]
+ * @return Interpolation
+ */
+fun quadratic(cp: Float, p1: Float, p2: Float, t: Float): Float
+{
+    val u = 1.0f - t
+    return u * u * cp + 2.0f * t * u * p1 + t * t * p2
+}
+
+/**
+ * Compute several quadratic interpolation
+ *
+ * @param cp        Start value
+ * @param p1        First control point
+ * @param p2        Second control point
+ * @param precision Number of interpolation
+ * @param quadratic Where write interpolations
+ * @return Interpolations
+ */
+fun quadratic(cp: Float, p1: Float, p2: Float, precision: Int,
+              quadratic: FloatArray? = null): FloatArray
+{
+    var quadraticLocal = quadratic
+    var actual: Float
+
+    if (quadraticLocal == null || quadraticLocal.size < precision)
+    {
+        quadraticLocal = FloatArray(precision)
+    }
+
+    val step = 1.0f / (precision - 1.0f)
+    actual = 0.0f
+
+    for (i in 0 until precision)
+    {
+        if (i == precision - 1)
+        {
+            actual = 1.0f
+        }
+
+        quadraticLocal[i] = quadratic(cp, p1, p2, actual)
+        actual += step
+    }
+
+    return quadraticLocal
+}
+/**
+ * Compute the cubic interpolation
+ *
+ * @param cp Start value
+ * @param p1 First control point
+ * @param p2 Second control point
+ * @param p3 Third control point
+ * @param t  Factor in [0, 1]
+ * @return Interpolation
+ */
+fun cubic(cp: Float, p1: Float, p2: Float, p3: Float, t: Float): Float
+{
+    val u = 1.0f - t
+    return u * u * u * cp + 3.0f * t * u * u * p1 + 3.0f * t * t * u * p2 + t * t * t * p3
+}
+
+/**
+ * Compute several cubic interpolation
+ *
+ * @param cp        Start value
+ * @param p1        First control point
+ * @param p2        Second control point
+ * @param p3        Third control point
+ * @param precision Number of interpolation
+ * @param cubic     Where write interpolations. If `null` or length too small, a new array is created
+ * @return Interpolations
+ */
+fun cubic(cp: Float, p1: Float, p2: Float, p3: Float, precision: Int,
+          cubic: FloatArray? = null): FloatArray
+{
+    var cubicLocal = cubic
+    var actual: Float
+
+    if (cubicLocal == null || cubicLocal.size < precision)
+    {
+        cubicLocal = FloatArray(precision)
+    }
+
+    val step = 1.0f / (precision - 1.0f)
+    actual = 0.0f
+
+    for (i in 0 until precision)
+    {
+        if (i == precision - 1)
+        {
+            actual = 1.0f
+        }
+
+        cubicLocal[i] = cubic(cp, p1, p2, p3, actual)
+        actual += step
+    }
+
+    return cubicLocal
+}
