@@ -267,5 +267,7 @@ In DSL way use no DSL way is just call method of current node.
 In no DSL, for example their have `children` extension for `Node3D`  in [fr.jhelp.tools.engine3d.dsl.Node3DExtensions](../../Engine3D/src/main/java/fr/jhelp/tools/engine3d/dsl/Node3DExtensions.kt)  
 that permits to create hierarchy in **DSL** way.
 
+A detailed tutorial can be found here : [Tutorial for use the engine 3D](tutorial/TutorialEngine3D.md)
+
 ## Behind the scene how does it work
 
