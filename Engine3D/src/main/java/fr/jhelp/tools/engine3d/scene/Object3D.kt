@@ -14,6 +14,7 @@ import fr.jhelp.tools.engine3d.buffer.BufferFloat
 import fr.jhelp.tools.engine3d.math.BoundingBox
 import fr.jhelp.tools.engine3d.math.Triangle3D
 import fr.jhelp.tools.engine3d.math.Vertex
+import fr.jhelp.tools.engine3d.resources.texture
 import fr.jhelp.tools.engine3d.scene.morphing.MorphingTriangleComparator
 import fr.jhelp.tools.utilities.image.clear
 import fr.jhelp.tools.utilities.math.Point2D
