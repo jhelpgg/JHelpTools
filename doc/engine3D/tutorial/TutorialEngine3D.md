@@ -7,4 +7,4 @@ You should be ready to create scene, see [Engine3D : Scene creation](../Engine3D
 and be able add elements inside it and configure the 3d view.
 
 * [3D version of hello world](helloWorld/HelloWorld3D.md)
-* 
+* [Material and texture](materialAndTexture/MaterialAndTexture.md)
