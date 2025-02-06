@@ -5,7 +5,11 @@ import fr.jhelp.tools.engine3d.scene.GREEN
 import fr.jhelp.tools.engine3d.scene.Node3D
 import fr.jhelp.tools.engine3d.scene.Object3D
 import fr.jhelp.tools.engine3d.scene.geometry.Box
+import fr.jhelp.tools.engine3d.scene.geometry.ObjectPath
 import fr.jhelp.tools.engine3d.scene.geometry.Plane
+import fr.jhelp.tools.engine3d.scene.geometry.Revolution
+import fr.jhelp.tools.engine3d.scene.geometry.Sphere
+import fr.jhelp.tools.utilities.image.path.Path
 
 /**
  * Create a node tree
@@ -85,5 +89,64 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
         reference.node = boxReal
         box(boxReal)
         this.root.add(boxReal)
+    }
+    /**
+     * Add a revolution
+     */
+    fun revolution(reference: NodeReference = junkReference,
+                   angle: Float = 360f,
+                   multiplierU: Float = 1f, startV: Float = 0f, endV: Float = 1f,
+                   pathPrecision: Int = 5, rotationPrecision: Int = 12,
+                   path: Path.() -> Unit,
+                   seal: Boolean = true,
+                   revolution: Revolution.() -> Unit)
+    {
+        val pathReal = Path()
+        path(pathReal)
+        val revolutionReal = Revolution(pathReal,
+                                        angle,
+                                        multiplierU, startV, endV,
+                                        pathPrecision, rotationPrecision,
+                                        seal)
+        reference.node = revolutionReal
+        revolution(revolutionReal)
+        this.root.add(revolutionReal)
+    }
+
+    /**
+     * Add a sphere to the node tree
+     */
+    fun sphere(reference: NodeReference = junkReference,
+               multiplierU: Float = 1f, multiplierV: Float = 1f, slice: Int = 16, slack: Int = 16,
+               seal: Boolean = true,
+               sphere: Sphere.() -> Unit)
+    {
+        val sphereReal = Sphere(multiplierU, multiplierV, slice, slack, seal)
+        reference.node = sphereReal
+        sphere(sphereReal)
+        this.root.add(sphereReal)
+    }
+
+    /** Create object that represents a path along an other one */
+    fun objectPath(reference: NodeReference = junkReference,
+                   mainPath: Path.() -> Unit, mainPathPrecision: Int = 5,
+                   followPath: Path.() -> Unit, followPathPrecision: Int = 5,
+                   startU: Float = 0f, endU: Float = 1f,
+                   startV: Float = 0f, endV: Float = 1f,
+                   seal: Boolean = true,
+                   objectPath: ObjectPath.() -> Unit)
+    {
+        val mainPathReal = Path()
+        mainPath(mainPathReal)
+        val followPathReal = Path()
+        followPath(followPathReal)
+        val objectPathReal = ObjectPath(mainPathReal, mainPathPrecision,
+                                        followPathReal, followPathPrecision,
+                                        startU, endU,
+                                        startV, endV,
+                                        seal)
+        reference.node = objectPathReal
+        objectPath(objectPathReal)
+        this.root.add(objectPathReal)
     }
 }
