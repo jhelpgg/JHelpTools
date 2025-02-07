@@ -66,8 +66,10 @@ class View3D(context: Context, attributes: AttributeSet? = null) :
 
     fun tree(scene: SceneCreator.() -> Unit)
     {
-        val sceneCreator = SceneCreator(this)
-        sceneCreator.scene()
+        CoroutineScope(Dispatchers.Default).launch {
+            val sceneCreator = SceneCreator(this@View3D)
+            sceneCreator.scene()
+        }
     }
 
     fun view3DTouchAction(view3DTouchAction: View3DTouchAction)
