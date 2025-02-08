@@ -3,11 +3,14 @@ package fr.jhelp.tools.mathformal.simplifier
 import fr.jhelp.tools.mathformal.AdditionFormal
 import fr.jhelp.tools.mathformal.ConstantFormal
 import fr.jhelp.tools.mathformal.FunctionFormal
+import fr.jhelp.tools.mathformal.SubtractionFormal
 import fr.jhelp.tools.mathformal.UnaryMinusFormal
 import fr.jhelp.tools.mathformal.dsl.UNDEFINED
 import fr.jhelp.tools.mathformal.dsl.ZERO
 import fr.jhelp.tools.mathformal.dsl.constant
+import fr.jhelp.tools.mathformal.dsl.minus
 import fr.jhelp.tools.mathformal.dsl.plus
+import fr.jhelp.tools.mathformal.dsl.unaryMinus
 
 internal fun simplifyAddition(addition: AdditionFormal): FunctionFormal<*>
 {
@@ -32,29 +35,38 @@ internal fun simplifyAddition(addition: AdditionFormal): FunctionFormal<*>
             simplifyAddition(parameter2, parameter1)
 
         parameter1 is UnaryMinusFormal && parameter2 is UnaryMinusFormal ->
-            UnaryMinusFormal(AdditionFormal(simplifyFormal(parameter1.parameter), simplifyFormal(parameter2.parameter)))
+            -(simplifyFormal(parameter1.parameter) + simplifyFormal(parameter2.parameter))
+
+        parameter1 is UnaryMinusFormal                                   ->
+            simplifyFormal(parameter2) - simplifyFormal(parameter1.parameter)
+
+        parameter2 is UnaryMinusFormal                                   ->
+            simplifyFormal(parameter1) - simplifyFormal(parameter2.parameter)
 
         parameter1 is AdditionFormal && parameter2 is AdditionFormal     ->
             simplifyAddition(parameter1, parameter2)
 
-        parameter1 is AdditionFormal ->
-            AdditionFormal(simplifyFormal(parameter1.parameter1), simplifyFormal(AdditionFormal(parameter1.parameter2, parameter2)))
+        parameter1 is AdditionFormal                                     ->
+            simplifyFormal(parameter1.parameter1) + simplifyFormal(parameter1.parameter2 + parameter2)
 
-        parameter2 is AdditionFormal ->
-            AdditionFormal(simplifyFormal(parameter2.parameter1), simplifyFormal(AdditionFormal(parameter2.parameter2, parameter1)))
+        parameter2 is AdditionFormal                                     ->
+            simplifyFormal(parameter2.parameter1) + simplifyFormal(AdditionFormal(parameter2.parameter2, parameter1))
 
         else                                                             ->
-            AdditionFormal(simplifyFormal(parameter1), simplifyFormal(parameter2))
+            simplifyFormal(parameter1) + simplifyFormal(parameter2)
     }
 }
 
 private fun simplifyAddition(constant: ConstantFormal, other: FunctionFormal<*>): FunctionFormal<*> =
     when (other)
     {
-        is ConstantFormal ->
-            ConstantFormal(constant.value + other.value)
+        is ConstantFormal    ->
+            constant(constant.value + other.value)
 
-        is AdditionFormal ->
+        is UnaryMinusFormal  ->
+            constant - simplifyFormal(other.parameter)
+
+        is AdditionFormal    ->
         {
             val parameter21 = other.parameter1
             val parameter22 = other.parameter2
@@ -65,21 +77,49 @@ private fun simplifyAddition(constant: ConstantFormal, other: FunctionFormal<*>)
                     UNDEFINED
 
                 parameter21 is ConstantFormal && parameter22 is ConstantFormal ->
-                    ConstantFormal(constant.value + parameter21.value + parameter22.value)
+                    constant(constant.value + parameter21.value + parameter22.value)
 
                 parameter21 is ConstantFormal                                  ->
-                    AdditionFormal(ConstantFormal(constant.value + parameter21.value), simplifyFormal(parameter22))
+                    constant(constant.value + parameter21.value) + simplifyFormal(parameter22)
 
                 parameter22 is ConstantFormal                                  ->
-                    AdditionFormal(ConstantFormal(constant.value + parameter22.value), simplifyFormal(parameter21))
+                    constant(constant.value + parameter22.value) + simplifyFormal(parameter21)
 
                 else                                                           ->
-                    AdditionFormal(constant, simplifyFormal(other))
+                    constant + simplifyFormal(other)
             }
         }
 
-        else              ->
-            AdditionFormal(constant, simplifyFormal(other))
+        // C + (f1 - f2)
+        is SubtractionFormal ->
+        {
+            val parameter21 = other.parameter1
+            val parameter22 = other.parameter2
+
+            when
+            {
+                parameter21 == UNDEFINED || parameter22 == UNDEFINED           ->
+                    UNDEFINED
+
+                // C + (C1 - C2)
+                parameter21 is ConstantFormal && parameter22 is ConstantFormal ->
+                    constant(constant.value + parameter21.value - parameter22.value)
+
+                // C + (C1 - f2)
+                parameter21 is ConstantFormal                                  ->
+                    constant(constant.value + parameter21.value) - simplifyFormal(parameter22)
+
+                // C + (f1 - C2)
+                parameter22 is ConstantFormal                                  ->
+                    constant(constant.value - parameter22.value) + simplifyFormal(parameter21)
+
+                else                                                           ->
+                    constant + simplifyFormal(other)
+            }
+        }
+
+        else                 ->
+            constant + simplifyFormal(other)
     }
 
 private fun simplifyAddition(addition1: AdditionFormal, addition2: AdditionFormal): FunctionFormal<*>
@@ -117,7 +157,7 @@ private fun simplifyAddition(addition1: AdditionFormal, addition2: AdditionForma
 
     for (parameter in parametersLeft)
     {
-        result = AdditionFormal(result, simplifyFormal(parameter))
+        result += simplifyFormal(parameter)
     }
 
     return result

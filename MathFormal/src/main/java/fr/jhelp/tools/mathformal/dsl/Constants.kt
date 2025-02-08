@@ -5,18 +5,29 @@ import fr.jhelp.tools.utilities.collections.cache.CacheSizeLimit
 import fr.jhelp.tools.utilities.extensions.onPresentOtherwise
 
 internal const val PRECISION = 1e-15
-internal fun Double.sameFormal(other: Double) :Boolean  = kotlin.math.abs(this - other) < PRECISION
-internal val Double.nulFormal : Boolean get() =
-    this.sameFormal(0.0)
-internal val Double.signFormal : Int get() =
-when
-{
-    this.nulFormal -> 0
-    this > 0 -> 1
-    else -> -1
-}
-internal fun Double.compareFormal(other: Double) : Int =
-    (this-other).signFormal
+internal fun Double.sameFormal(other: Double): Boolean = kotlin.math.abs(this - other) < PRECISION
+internal val Double.nulFormal: Boolean
+    get() =
+        this.sameFormal(0.0)
+internal val Double.signFormal: Int
+    get() =
+        when
+        {
+            this.nulFormal -> 0
+            this > 0       -> 1
+            else           -> -1
+        }
+
+internal fun Double.compareFormal(other: Double): Int =
+    when
+    {
+        this.isNaN() || this.isInfinite()   -> if (other.isNaN() || other.isInfinite()) 0 else 1
+
+        other.isNaN() || other.isInfinite() -> -1
+
+        else                                -> (this - other).signFormal
+    }
+
 val UNDEFINED = ConstantFormal(Double.NaN)
 val ZERO = ConstantFormal(0.0)
 val ONE = ConstantFormal(1.0)

@@ -8,6 +8,7 @@ import fr.jhelp.tools.mathformal.dsl.ONE
 import fr.jhelp.tools.mathformal.dsl.UNDEFINED
 import fr.jhelp.tools.mathformal.dsl.ZERO
 import fr.jhelp.tools.mathformal.dsl.constant
+import fr.jhelp.tools.mathformal.dsl.unaryMinus
 
 internal fun simplifyMinusUnary(minusUnary: UnaryMinusFormal): FunctionFormal<*>
 {
@@ -21,6 +22,6 @@ internal fun simplifyMinusUnary(minusUnary: UnaryMinusFormal): FunctionFormal<*>
         MINUS_ONE           -> ONE
         is ConstantFormal   -> constant(-parameter.value)
         is UnaryMinusFormal -> simplifyFormal(parameter.parameter)
-        else                -> UnaryMinusFormal(simplifyFormal(parameter))
+        else                -> -simplifyFormal(parameter)
     }
 }

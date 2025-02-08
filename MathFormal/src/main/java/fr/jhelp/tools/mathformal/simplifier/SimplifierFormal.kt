@@ -5,6 +5,7 @@ import fr.jhelp.tools.mathformal.ConstantFormal
 import fr.jhelp.tools.mathformal.CosineFormal
 import fr.jhelp.tools.mathformal.FunctionFormal
 import fr.jhelp.tools.mathformal.SineFormal
+import fr.jhelp.tools.mathformal.SubtractionFormal
 import fr.jhelp.tools.mathformal.UnaryMinusFormal
 import fr.jhelp.tools.mathformal.VariableFormal
 import java.util.TreeSet
@@ -12,28 +13,32 @@ import java.util.TreeSet
 fun simplifyFormal(functionFormal: FunctionFormal<*>): FunctionFormal<*> =
     when (functionFormal)
     {
-        is ConstantFormal   -> functionFormal
-        is VariableFormal   -> functionFormal
-        is UnaryMinusFormal -> simplifyMinusUnary(functionFormal)
-        is CosineFormal     -> simplifyCosine(functionFormal)
-        is SineFormal       -> simplifySine(functionFormal)
-        is AdditionFormal   -> simplifyAddition(functionFormal)
+        is ConstantFormal    -> functionFormal
+        is VariableFormal    -> functionFormal
+        is UnaryMinusFormal  -> simplifyMinusUnary(functionFormal)
+        is CosineFormal      -> simplifyCosine(functionFormal)
+        is SineFormal        -> simplifySine(functionFormal)
+        is AdditionFormal    -> simplifyAddition(functionFormal)
+        is SubtractionFormal -> simplifySubtraction(functionFormal)
     }
 
-val FunctionFormal<*>.simplify: FunctionFormal<*>
-    get()
+val FunctionFormal<*>.simplified: FunctionFormal<*> get() = this.simplify()
+
+fun FunctionFormal<*>.simplify(original: (FunctionFormal<*>) -> Unit = {},
+                               step: (FunctionFormal<*>) -> Unit = {},
+                               simplified: (FunctionFormal<*>) -> Unit = {}): FunctionFormal<*>
+{
+    original(this)
+    val seen = TreeSet<FunctionFormal<*>>()
+    seen.add(this)
+    var simplify = simplifyFormal(this)
+
+    while (seen.add(simplify))
     {
-        println(this)
-        val seen = TreeSet<FunctionFormal<*>>()
-        seen.add(this)
-        var simplify = simplifyFormal(this)
-
-        while (seen.add(simplify))
-        {
-            println("-> $simplify")
-            simplify = simplifyFormal(simplify)
-        }
-
-        println("=> $simplify")
-        return simplify
+        step(simplify)
+        simplify = simplifyFormal(simplify)
     }
+
+    simplified(simplify)
+    return simplify
+}

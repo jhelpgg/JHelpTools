@@ -4,9 +4,19 @@ import fr.jhelp.tools.mathformal.AdditionFormal
 import fr.jhelp.tools.mathformal.ConstantFormal
 import fr.jhelp.tools.mathformal.CosineFormal
 import fr.jhelp.tools.mathformal.SineFormal
+import fr.jhelp.tools.mathformal.SubtractionFormal
 import fr.jhelp.tools.mathformal.UnaryMinusFormal
 import fr.jhelp.tools.mathformal.VariableFormal
+import fr.jhelp.tools.mathformal.dsl.PI
 import fr.jhelp.tools.mathformal.dsl.UNDEFINED
+import fr.jhelp.tools.mathformal.dsl.X
+import fr.jhelp.tools.mathformal.dsl.Y
+import fr.jhelp.tools.mathformal.dsl.Z
+import fr.jhelp.tools.mathformal.dsl.constant
+import fr.jhelp.tools.mathformal.dsl.cos
+import fr.jhelp.tools.mathformal.dsl.minus
+import fr.jhelp.tools.mathformal.dsl.plus
+import fr.jhelp.tools.mathformal.dsl.sin
 import fr.jhelp.tools.test.assertInstance
 import fr.jhelp.tools.utilities.math.EPSILON
 import org.junit.Assert
@@ -14,6 +24,18 @@ import org.junit.Test
 
 class ParserFormalTests
 {
+    private val parseTest = listOf(
+        "PI" to PI,
+        "123" to 123.constant,
+        "x" to X,
+        "y" to Y,
+        "x + y" to X + Y,
+        "x - y" to X - Y,
+        "x + y - z" to X + (Y - Z),
+        "x - cos(y + sin(z))" to X - cos(Y + sin(Z)),
+        "x - y + z" to (X - Y) + Z
+                                  )
+
     @Test
     fun parseConstant()
     {
@@ -108,7 +130,27 @@ class ParserFormalTests
         Assert.assertEquals("W", parameterW.name)
     }
 
+    @Test
+    fun `parse X - Y`()
+    {
+        val formal = parseFormal("X - Y")
+        val subtraction = formal.assertInstance<SubtractionFormal>()
+        val parameter1 = subtraction.parameter1.assertInstance<VariableFormal>()
+        val parameter2 = subtraction.parameter2.assertInstance<VariableFormal>()
+        Assert.assertEquals("X", parameter1.name)
+        Assert.assertEquals("Y", parameter2.name)
+    }
+
     // TODO other tests
+
+    @Test
+    fun parseTests()
+    {
+        for ((string, formal) in this.parseTest)
+        {
+            Assert.assertEquals("Wrong parsing for '$string'", formal, parseFormal(string))
+        }
+    }
 
     @Test
     fun parseInvalid()
