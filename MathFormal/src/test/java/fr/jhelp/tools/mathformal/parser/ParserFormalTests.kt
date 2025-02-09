@@ -31,9 +31,9 @@ class ParserFormalTests
         "y" to Y,
         "x + y" to X + Y,
         "x - y" to X - Y,
-        "x + y - z" to X + (Y - Z),
+        "x + y - z" to (X + Y) - Z,
         "x - cos(y + sin(z))" to X - cos(Y + sin(Z)),
-        "x - y + z" to (X - Y) + Z
+        "x - y + z" to X - (Y + Z)
                                   )
 
     @Test

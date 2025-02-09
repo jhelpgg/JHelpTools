@@ -43,7 +43,7 @@ private fun indexAndSymbol(string: String): Pair<Int, Char>
 {
     var index = -1
     var symbol = ' '
-    var indexSymbol = operatorsSymbols.size
+    var indexSymbol = -1
     var parenthesis = 0
     val characters = string.toCharArray()
 
@@ -58,7 +58,7 @@ private fun indexAndSymbol(string: String): Pair<Int, Char>
                 {
                     val indexInSymbols = operatorsSymbols.indexOf(character)
 
-                    if (indexInSymbols in 0..<indexSymbol)
+                    if (indexInSymbols > indexSymbol)
                     {
                         indexSymbol = indexInSymbols
                         index = indexCharacter
