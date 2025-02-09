@@ -14,6 +14,7 @@ import fr.jhelp.tools.mathformal.dsl.cos
 import fr.jhelp.tools.mathformal.dsl.minus
 import fr.jhelp.tools.mathformal.dsl.plus
 import fr.jhelp.tools.mathformal.dsl.sin
+import fr.jhelp.tools.mathformal.dsl.times
 import fr.jhelp.tools.mathformal.dsl.unaryMinus
 import org.junit.Assert
 import org.junit.Test
@@ -28,7 +29,9 @@ class SimplifierFormalTests
         X + Y to X + Y,
         X - Y to X - Y,
         X + 3 - (X - 3) to 6.constant,
-        X + Y - cos(Z + sin(W - UNDEFINED)) to UNDEFINED
+        X + Y - cos(Z + sin(W - UNDEFINED)) to UNDEFINED,
+        3 * X + 2 * Y + 2 * X to 5 * X + 2 * Y,
+        3 * X + 2 * Y - 2 * X to X + 2 * Y
                                            )
 
     @Test
@@ -97,6 +100,15 @@ class SimplifierFormalTests
                             (1 - X - 1 - Y - 1).simplify(original = { function -> println(function) },
                                                          step = { function -> println("-> $function") },
                                                          simplified = { function -> println("=> $function \n") }))
+    }
+
+    @Test
+    fun simplifyMultiplication()
+    {
+        Assert.assertEquals(MINUS_ONE, (ONE * MINUS_ONE).simplified)
+        Assert.assertEquals(2 * X, (1 * X * 2).simplify(original = { function -> println(function) },
+                                                        step = { function -> println("-> $function") },
+                                                        simplified = { function -> println("=> $function \n") }))
     }
 
     @Test

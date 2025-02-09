@@ -4,6 +4,7 @@ import fr.jhelp.tools.mathformal.AdditionFormal
 import fr.jhelp.tools.mathformal.ConstantFormal
 import fr.jhelp.tools.mathformal.CosineFormal
 import fr.jhelp.tools.mathformal.FunctionFormal
+import fr.jhelp.tools.mathformal.MultiplicationFormal
 import fr.jhelp.tools.mathformal.SineFormal
 import fr.jhelp.tools.mathformal.SubtractionFormal
 import fr.jhelp.tools.mathformal.UnaryMinusFormal
@@ -20,6 +21,7 @@ fun simplifyFormal(functionFormal: FunctionFormal<*>): FunctionFormal<*> =
         is SineFormal        -> simplifySine(functionFormal)
         is AdditionFormal    -> simplifyAddition(functionFormal)
         is SubtractionFormal -> simplifySubtraction(functionFormal)
+        is MultiplicationFormal -> simplifyMultiplication(functionFormal)
     }
 
 val FunctionFormal<*>.simplified: FunctionFormal<*> get() = this.simplify()

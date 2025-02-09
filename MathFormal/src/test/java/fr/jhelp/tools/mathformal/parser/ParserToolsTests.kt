@@ -1,18 +1,19 @@
 package fr.jhelp.tools.mathformal.parser
 
 import org.junit.Assert
+import org.junit.Test
 import kotlin.jvm.Throws
 
 class ParserToolsTests
 {
-    @Throws
+    @Test
     fun removeSpacesTest()
     {
         Assert.assertEquals("Hello", removeSpaces("Hello"))
         Assert.assertEquals("Hello", removeSpaces(" \t \n \r Hel \t \n \r lo \t \n \r "))
     }
 
-    @Throws
+    @Test
     fun extractInsideParenthesisTest()
     {
         val string ="5(X/(Y-Z))"
@@ -43,5 +44,12 @@ class ParserToolsTests
         {
             // Is what we expect
         }
+    }
+
+    @Test
+    fun addMultiplicationTests()
+    {
+        Assert.assertEquals("5*X", addMultiplication("5X"))
+        Assert.assertEquals("5.23*X+85*Y+7*cos(4*PI)", addMultiplication("5.23X+85Y+7cos(4PI)"))
     }
 }

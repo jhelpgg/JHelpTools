@@ -15,7 +15,7 @@ val T = variable("t")
 private object VariableManager
 {
     val variableCache = CacheSizeLimit<String, VariableFormal>()
-    private val variablePattern: Pattern by lazy { Pattern.compile("[A-Za-z][A-Za-z0-9_]*") }
+    private val variablePattern: Pattern by lazy { Pattern.compile("[A-Za-z]+") }
     fun nameValid(name: String): Boolean = this.variablePattern.matcher(name).matches()
 }
 

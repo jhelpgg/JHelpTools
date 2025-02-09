@@ -12,6 +12,7 @@ import fr.jhelp.tools.mathformal.dsl.cos
 import fr.jhelp.tools.mathformal.dsl.minus
 import fr.jhelp.tools.mathformal.dsl.plus
 import fr.jhelp.tools.mathformal.dsl.sin
+import fr.jhelp.tools.mathformal.dsl.times
 import fr.jhelp.tools.mathformal.dsl.unaryMinus
 import fr.jhelp.tools.mathformal.dsl.variable
 import org.junit.Assert
@@ -28,7 +29,10 @@ class SerializerFormalTests
         X - Y to "x - y",
         X + (Y - Z) to "x + (y - z)",
         X - cos(Y + sin(Z)) to "x - cos(y + sin(z))",
-        X - (Y + Z) to "x - (y + z)"
+        X - (Y + Z) to "x - (y + z)",
+        X * Y to "x * y",
+        Z * 4 to "4.0z",
+        (3 * X) + (4 * Y) to "(3.0x) + (4.0y)",
                                       )
 
     @Test
@@ -76,6 +80,12 @@ class SerializerFormalTests
     {
         Assert.assertEquals("x - y", serializeFormal(X - Y))
         Assert.assertEquals("(((x - y) - cos(a - b)) - z) - (t - w)", serializeFormal(X - Y - cos("a".variable - "b") - Z - (T - W)))
+    }
+
+    @Test
+    fun serializeMultiplication()
+    {
+        Assert.assertEquals("x * y", serializeFormal(X * Y))
     }
 
     @Test

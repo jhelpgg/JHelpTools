@@ -2,7 +2,12 @@ package fr.jhelp.tools.mathformal.dsl
 
 import fr.jhelp.tools.mathformal.AdditionFormal
 import fr.jhelp.tools.mathformal.FunctionFormal
+import fr.jhelp.tools.mathformal.MultiplicationFormal
 import fr.jhelp.tools.mathformal.SubtractionFormal
+
+// ################
+// ### ADDITION ###
+// ################
 
 operator fun FunctionFormal<*>.plus(other: FunctionFormal<*>): AdditionFormal =
     createAddition(this, other)
@@ -26,6 +31,10 @@ private fun createAddition(parameter1: FunctionFormal<*>, parameter2: FunctionFo
         AdditionFormal(parameter2, parameter1)
     }
 
+// ###################
+// ### SUBTRACTION ###
+// ###################
+
 operator fun FunctionFormal<*>.minus(other: FunctionFormal<*>): SubtractionFormal =
     SubtractionFormal(this, other)
 
@@ -37,3 +46,29 @@ operator fun Number.minus(other: FunctionFormal<*>): SubtractionFormal =
 
 operator fun FunctionFormal<*>.minus(other: String): SubtractionFormal =
     SubtractionFormal(this, other.variable)
+
+// ######################
+// ### MULTIPLICATION ###
+// ######################
+
+operator fun FunctionFormal<*>.times(other: FunctionFormal<*>): MultiplicationFormal =
+    createMultiplication(this, other)
+
+operator fun FunctionFormal<*>.times(other: Number): MultiplicationFormal =
+    createMultiplication(this, other.constant)
+
+operator fun Number.times(other: FunctionFormal<*>): MultiplicationFormal =
+    createMultiplication(constant(this.toDouble()), other)
+
+operator fun FunctionFormal<*>.times(other: String): MultiplicationFormal =
+    createMultiplication(this, other.variable)
+
+private fun createMultiplication(parameter1: FunctionFormal<*>, parameter2: FunctionFormal<*>): MultiplicationFormal =
+    if (parameter1 <= parameter2)
+    {
+        MultiplicationFormal(parameter1, parameter2)
+    }
+    else
+    {
+        MultiplicationFormal(parameter2, parameter1)
+    }

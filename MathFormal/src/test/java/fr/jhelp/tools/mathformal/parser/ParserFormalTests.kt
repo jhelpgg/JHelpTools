@@ -3,6 +3,7 @@ package fr.jhelp.tools.mathformal.parser
 import fr.jhelp.tools.mathformal.AdditionFormal
 import fr.jhelp.tools.mathformal.ConstantFormal
 import fr.jhelp.tools.mathformal.CosineFormal
+import fr.jhelp.tools.mathformal.MultiplicationFormal
 import fr.jhelp.tools.mathformal.SineFormal
 import fr.jhelp.tools.mathformal.SubtractionFormal
 import fr.jhelp.tools.mathformal.UnaryMinusFormal
@@ -17,6 +18,7 @@ import fr.jhelp.tools.mathformal.dsl.cos
 import fr.jhelp.tools.mathformal.dsl.minus
 import fr.jhelp.tools.mathformal.dsl.plus
 import fr.jhelp.tools.mathformal.dsl.sin
+import fr.jhelp.tools.mathformal.dsl.times
 import fr.jhelp.tools.test.assertInstance
 import fr.jhelp.tools.utilities.math.EPSILON
 import org.junit.Assert
@@ -33,17 +35,20 @@ class ParserFormalTests
         "x - y" to X - Y,
         "x + y - z" to (X + Y) - Z,
         "x - cos(y + sin(z))" to X - cos(Y + sin(Z)),
-        "x - y + z" to X - (Y + Z)
+        "x - y + z" to X - (Y + Z),
+        "x * y" to X * Y,
+        "3x + 4y" to (3 * X) + (4 * Y),
+        "3x + 4y - z * t" to (3 * X) + (4 * Y) - (Z * "t"),
                                   )
 
     @Test
     fun parseConstant()
     {
-        var formal = parseFormal("PI")
+        var formal = parse("PI")
         var constant = formal.assertInstance<ConstantFormal>()
         Assert.assertEquals(Math.PI, constant.value, EPSILON)
 
-        formal = parseFormal("123")
+        formal = parse("123")
         constant = formal.assertInstance<ConstantFormal>()
         Assert.assertEquals(123.0, constant.value, EPSILON)
     }
@@ -51,11 +56,11 @@ class ParserFormalTests
     @Test
     fun parseVariable()
     {
-        var formal = parseFormal("x")
+        var formal = parse("x")
         var variable = formal.assertInstance<VariableFormal>()
         Assert.assertEquals("x", variable.name)
 
-        formal = parseFormal("y")
+        formal = parse("y")
         variable = formal.assertInstance<VariableFormal>()
         Assert.assertEquals("y", variable.name)
     }
@@ -63,7 +68,7 @@ class ParserFormalTests
     @Test
     fun parseUnaryMinus()
     {
-        val formal = parseFormal("-X")
+        val formal = parse("-X")
         val unaryMinus = formal.assertInstance<UnaryMinusFormal>()
         val variable = unaryMinus.parameter.assertInstance<VariableFormal>()
         Assert.assertEquals("X", variable.name)
@@ -72,7 +77,7 @@ class ParserFormalTests
     @Test
     fun parseCosine()
     {
-        val formal = parseFormal("cos(X)")
+        val formal = parse("cos(X)")
         val cosine = formal.assertInstance<CosineFormal>()
         val variable = cosine.parameter.assertInstance<VariableFormal>()
         Assert.assertEquals("X", variable.name)
@@ -81,7 +86,7 @@ class ParserFormalTests
     @Test
     fun parseSine()
     {
-        val formal = parseFormal("sin(X)")
+        val formal = parse("sin(X)")
         val sine = formal.assertInstance<SineFormal>()
         val variable = sine.parameter.assertInstance<VariableFormal>()
         Assert.assertEquals("X", variable.name)
@@ -90,7 +95,7 @@ class ParserFormalTests
     @Test
     fun `parse X + Y`()
     {
-        val formal = parseFormal("X + Y")
+        val formal = parse("X + Y")
         val addition = formal.assertInstance<AdditionFormal>()
         val parameter1 = addition.parameter1.assertInstance<VariableFormal>()
         val parameter2 = addition.parameter2.assertInstance<VariableFormal>()
@@ -101,7 +106,7 @@ class ParserFormalTests
     @Test
     fun `parse X + Y + cos(a+b) + Z + (T+W)`()
     {
-        val formal = parseFormal("X + Y + cos(a+b) + Z + (T+W)")
+        val formal = parse("X + Y + cos(a+b) + Z + (T+W)")
 
         val additionXPlusSomething = formal.assertInstance<AdditionFormal>()
         val parameterX = additionXPlusSomething.parameter1.assertInstance<VariableFormal>()
@@ -133,7 +138,7 @@ class ParserFormalTests
     @Test
     fun `parse X - Y`()
     {
-        val formal = parseFormal("X - Y")
+        val formal = parse("X - Y")
         val subtraction = formal.assertInstance<SubtractionFormal>()
         val parameter1 = subtraction.parameter1.assertInstance<VariableFormal>()
         val parameter2 = subtraction.parameter2.assertInstance<VariableFormal>()
@@ -141,20 +146,40 @@ class ParserFormalTests
         Assert.assertEquals("Y", parameter2.name)
     }
 
-    // TODO other tests
+    @Test
+    fun `parse X x Y`()
+    {
+        val formal = parse("X * Y")
+        val multiplication = formal.assertInstance<MultiplicationFormal>()
+        val parameter1 = multiplication.parameter1.assertInstance<VariableFormal>()
+        val parameter2 = multiplication.parameter2.assertInstance<VariableFormal>()
+        Assert.assertEquals("X", parameter1.name)
+        Assert.assertEquals("Y", parameter2.name)
+    }
+
+    @Test
+    fun `parse 3X`()
+    {
+        val formal = parse("3X")
+        val multiplication = formal.assertInstance<MultiplicationFormal>()
+        val parameter1 = multiplication.parameter1.assertInstance<ConstantFormal>()
+        val parameter2 = multiplication.parameter2.assertInstance<VariableFormal>()
+        Assert.assertEquals(3.constant, parameter1)
+        Assert.assertEquals("X", parameter2.name)
+    }
 
     @Test
     fun parseTests()
     {
         for ((string, formal) in this.parseTest)
         {
-            Assert.assertEquals("Wrong parsing for '$string'", formal, parseFormal(string))
+            Assert.assertEquals("Wrong parsing for '$string'", formal, parse(string))
         }
     }
 
     @Test
     fun parseInvalid()
     {
-        Assert.assertEquals(UNDEFINED, parseFormal("*"))
+        Assert.assertEquals(UNDEFINED, parse("*"))
     }
 }

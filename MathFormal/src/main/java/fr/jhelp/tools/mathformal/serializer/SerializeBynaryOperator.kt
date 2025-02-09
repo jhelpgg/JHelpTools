@@ -1,6 +1,10 @@
 package fr.jhelp.tools.mathformal.serializer
 
 import fr.jhelp.tools.mathformal.BinaryOperatorFormal
+import java.util.regex.Pattern
+
+private val constantMultiplyVariablePattern = Pattern.compile("([0-9]+)\\s*\\*\\s*([a-zA-Z])")
+private const val constantMultiplyVariableReplacement = "$1$2"
 
 fun serializeBinaryOperator(binaryOperatorFormal: BinaryOperatorFormal<*>): String
 {
@@ -38,5 +42,6 @@ fun serializeBinaryOperator(binaryOperatorFormal: BinaryOperatorFormal<*>): Stri
         stringBuilder.append(')')
     }
 
-    return stringBuilder.toString()
+    return constantMultiplyVariablePattern.matcher(stringBuilder.toString()).replaceAll(constantMultiplyVariableReplacement)
 }
+

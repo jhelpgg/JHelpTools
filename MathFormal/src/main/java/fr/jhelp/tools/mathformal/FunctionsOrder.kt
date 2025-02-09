@@ -1,11 +1,12 @@
 package fr.jhelp.tools.mathformal
 
-internal val functionsOrder: Array<Class<out FunctionFormal<*>>> =
+private val functionsOrder: Array<Class<out FunctionFormal<*>>> =
     arrayOf(ConstantFormal::class.java,
             VariableFormal::class.java,
             UnaryMinusFormal::class.java,
             CosineFormal::class.java,
             SineFormal::class.java,
+            MultiplicationFormal::class.java,
             AdditionFormal::class.java,
             SubtractionFormal::class.java)
 

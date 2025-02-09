@@ -1,5 +1,8 @@
 package fr.jhelp.tools.mathformal.parser
 
+import fr.jhelp.tools.utilities.checkArgument
+import java.util.regex.Pattern
+
 fun removeSpaces(string: String): String
 {
     val chars = string.toCharArray()
@@ -20,6 +23,8 @@ fun removeSpaces(string: String): String
 
 fun extractInsideParenthesis(string: String, firstOpenParenthesisIndex: Int): Pair<String, Int>
 {
+    (string[firstOpenParenthesisIndex] == '(').checkArgument("first index must be a (")
+
     var openParenthesis = 1
     var index = firstOpenParenthesisIndex + 1
 
@@ -49,3 +54,9 @@ fun extractInsideParenthesis(string: String, firstOpenParenthesisIndex: Int): Pa
 
     return string.substring(firstOpenParenthesisIndex + 1, index) to index
 }
+
+private val endConstantStartVariablePattern = Pattern.compile("([0-9])([a-zA-Z])")
+private const val endConstantStartVariableReplacement = "$1*$2"
+
+internal fun addMultiplication(string: String): String =
+    endConstantStartVariablePattern.matcher(string).replaceAll(endConstantStartVariableReplacement)
