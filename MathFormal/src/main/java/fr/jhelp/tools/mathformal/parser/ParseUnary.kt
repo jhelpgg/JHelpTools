@@ -1,9 +1,9 @@
 package fr.jhelp.tools.mathformal.parser
 
-import fr.jhelp.tools.mathformal.CosineFormal
-import fr.jhelp.tools.mathformal.SineFormal
-import fr.jhelp.tools.mathformal.UnaryMinusFormal
 import fr.jhelp.tools.mathformal.UnaryOperatorFormal
+import fr.jhelp.tools.mathformal.dsl.cos
+import fr.jhelp.tools.mathformal.dsl.sin
+import fr.jhelp.tools.mathformal.dsl.unaryMinus
 import java.util.Optional
 
 internal fun parseUnary(string: String): Optional<UnaryOperatorFormal<*>> =
@@ -12,18 +12,18 @@ internal fun parseUnary(string: String): Optional<UnaryOperatorFormal<*>> =
         string.startsWith("-")   ->
             if (string[1] == '(')
             {
-                Optional.of(UnaryMinusFormal(parseFormal(extractInsideParenthesis(string, 1).first)))
+                Optional.of(-(parseFormal(extractInsideParenthesis(string, 1).first)))
             }
             else
             {
-                Optional.of(UnaryMinusFormal(parseFormal(string.substring(1))))
+                Optional.of(-(parseFormal(string.substring(1))))
             }
 
         string.startsWith("cos") ->
-            Optional.of(CosineFormal(parseFormal(extractInsideParenthesis(string, 3).first)))
+            Optional.of(cos(parseFormal(extractInsideParenthesis(string, 3).first)))
 
         string.startsWith("sin") ->
-            Optional.of(SineFormal(parseFormal(extractInsideParenthesis(string, 3).first)))
+            Optional.of(sin(parseFormal(extractInsideParenthesis(string, 3).first)))
 
         else                     -> Optional.empty()
     }

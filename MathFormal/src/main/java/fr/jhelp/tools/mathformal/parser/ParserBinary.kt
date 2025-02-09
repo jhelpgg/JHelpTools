@@ -1,8 +1,8 @@
 package fr.jhelp.tools.mathformal.parser
 
-import fr.jhelp.tools.mathformal.AdditionFormal
 import fr.jhelp.tools.mathformal.BinaryOperatorFormal
-import fr.jhelp.tools.mathformal.SubtractionFormal
+import fr.jhelp.tools.mathformal.dsl.minus
+import fr.jhelp.tools.mathformal.dsl.plus
 import java.util.Optional
 
 // Order in priority (most priority first)
@@ -33,8 +33,8 @@ internal fun parseBinary(string: String): Optional<BinaryOperatorFormal<*>>
 
     return when (symbol)
     {
-        '+'  -> Optional.of(AdditionFormal(parseFormal(parameter1), parseFormal(parameter2)))
-        '-'  -> Optional.of(SubtractionFormal(parseFormal(parameter1), parseFormal(parameter2)))
+        '+'  -> Optional.of(parseFormal(parameter1) + parseFormal(parameter2))
+        '-'  -> Optional.of(parseFormal(parameter1) - parseFormal(parameter2))
         else -> Optional.empty()
     }
 }

@@ -50,7 +50,7 @@ internal fun simplifyAddition(addition: AdditionFormal): FunctionFormal<*>
             simplifyFormal(parameter1.parameter1) + simplifyFormal(parameter1.parameter2 + parameter2)
 
         parameter2 is AdditionFormal                                     ->
-            simplifyFormal(parameter2.parameter1) + simplifyFormal(AdditionFormal(parameter2.parameter2, parameter1))
+            simplifyFormal(parameter2.parameter1) + simplifyFormal(parameter2.parameter2 + parameter1)
 
         else                                                             ->
             simplifyFormal(parameter1) + simplifyFormal(parameter2)

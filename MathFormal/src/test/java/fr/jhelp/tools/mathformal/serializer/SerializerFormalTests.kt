@@ -68,7 +68,7 @@ class SerializerFormalTests
     fun serializeAddition()
     {
         Assert.assertEquals("x + y", serializeFormal(X + Y))
-        Assert.assertEquals("(((x + y) + cos(a + b)) + z) + (t + w)", serializeFormal(X + Y + cos("a".variable + "b") + Z + (T + W)))
+        Assert.assertEquals("(t + w) + (z + (cos(a + b) + (x + y)))", serializeFormal(X + Y + cos("a".variable + "b") + Z + (T + W)))
     }
 
     @Test

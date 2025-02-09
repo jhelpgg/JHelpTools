@@ -7,14 +7,14 @@ import fr.jhelp.tools.mathformal.UnaryMinusFormal
 
 operator fun FunctionFormal<*>.unaryMinus(): UnaryMinusFormal = UnaryMinusFormal(this)
 
-fun cos(parameter: FunctionFormal<*>): FunctionFormal<*> = CosineFormal(parameter)
+fun cos(parameter: FunctionFormal<*>): CosineFormal = CosineFormal(parameter)
 
-fun cos(value: Number): FunctionFormal<*> = CosineFormal(value.constant)
+fun cos(value: Number): CosineFormal = CosineFormal(value.constant)
 
-fun cos(name:String) : FunctionFormal<*> = CosineFormal(name.variable)
+fun cos(name:String) : CosineFormal = CosineFormal(name.variable)
 
-fun sin(parameter: FunctionFormal<*>): FunctionFormal<*> = SineFormal(parameter)
+fun sin(parameter: FunctionFormal<*>): SineFormal = SineFormal(parameter)
 
-fun sin(value: Number): FunctionFormal<*> = SineFormal(value.constant)
+fun sin(value: Number): SineFormal = SineFormal(value.constant)
 
-fun sin(name:String) : FunctionFormal<*> = SineFormal(name.variable)
+fun sin(name:String) : SineFormal = SineFormal(name.variable)

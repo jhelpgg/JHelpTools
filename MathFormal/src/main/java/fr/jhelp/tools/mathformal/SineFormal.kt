@@ -1,3 +1,3 @@
 package fr.jhelp.tools.mathformal
 
-class SineFormal(parameter: FunctionFormal<*>) : UnaryOperatorFormal<SineFormal>(parameter, "sin", true)
+class SineFormal internal constructor(parameter: FunctionFormal<*>) : UnaryOperatorFormal<SineFormal>(parameter, "sin", true)

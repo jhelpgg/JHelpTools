@@ -6,7 +6,8 @@ internal val functionsOrder: Array<Class<out FunctionFormal<*>>> =
             UnaryMinusFormal::class.java,
             CosineFormal::class.java,
             SineFormal::class.java,
-            AdditionFormal::class.java)
+            AdditionFormal::class.java,
+            SubtractionFormal::class.java)
 
 internal val FunctionFormal<*>.order: Int
     get() =
