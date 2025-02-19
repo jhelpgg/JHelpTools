@@ -1,6 +1,7 @@
 package fr.jhelp.tools.mathformal.dsl
 
 import fr.jhelp.tools.mathformal.AdditionFormal
+import fr.jhelp.tools.mathformal.DivisionFormal
 import fr.jhelp.tools.mathformal.FunctionFormal
 import fr.jhelp.tools.mathformal.MultiplicationFormal
 import fr.jhelp.tools.mathformal.SubtractionFormal
@@ -16,7 +17,7 @@ operator fun FunctionFormal<*>.plus(other: Number): AdditionFormal =
     createAddition(this, other.constant)
 
 operator fun Number.plus(other: FunctionFormal<*>): AdditionFormal =
-    createAddition(constant(this.toDouble()), other)
+    createAddition(this.constant, other)
 
 operator fun FunctionFormal<*>.plus(other: String): AdditionFormal =
     createAddition(this, other.variable)
@@ -42,7 +43,7 @@ operator fun FunctionFormal<*>.minus(other: Number): SubtractionFormal =
     SubtractionFormal(this, other.constant)
 
 operator fun Number.minus(other: FunctionFormal<*>): SubtractionFormal =
-    SubtractionFormal(constant(this.toDouble()), other)
+    SubtractionFormal(this.constant, other)
 
 operator fun FunctionFormal<*>.minus(other: String): SubtractionFormal =
     SubtractionFormal(this, other.variable)
@@ -58,7 +59,7 @@ operator fun FunctionFormal<*>.times(other: Number): MultiplicationFormal =
     createMultiplication(this, other.constant)
 
 operator fun Number.times(other: FunctionFormal<*>): MultiplicationFormal =
-    createMultiplication(constant(this.toDouble()), other)
+    createMultiplication(this.constant, other)
 
 operator fun FunctionFormal<*>.times(other: String): MultiplicationFormal =
     createMultiplication(this, other.variable)
@@ -72,3 +73,20 @@ private fun createMultiplication(parameter1: FunctionFormal<*>, parameter2: Func
     {
         MultiplicationFormal(parameter2, parameter1)
     }
+
+
+// ################
+// ### DIVISION ###
+// ################
+
+operator fun FunctionFormal<*>.div(other: FunctionFormal<*>): DivisionFormal =
+    DivisionFormal(this, other)
+
+operator fun FunctionFormal<*>.div(other: Number): DivisionFormal =
+    DivisionFormal(this, other.constant)
+
+operator fun Number.div(other: FunctionFormal<*>): DivisionFormal =
+    DivisionFormal(this.constant, other)
+
+operator fun FunctionFormal<*>.div(other: String): DivisionFormal =
+    DivisionFormal(this, other.variable)

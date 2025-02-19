@@ -10,6 +10,8 @@ import fr.jhelp.tools.mathformal.dsl.ZERO
 import fr.jhelp.tools.mathformal.dsl.constant
 import fr.jhelp.tools.mathformal.dsl.times
 import fr.jhelp.tools.mathformal.dsl.unaryMinus
+import fr.jhelp.tools.utilities.collections.SortedArray
+import java.util.Stack
 
 internal fun simplifyMultiplication(multiplication: MultiplicationFormal): FunctionFormal<*>
 {
@@ -48,96 +50,48 @@ internal fun simplifyMultiplication(multiplication: MultiplicationFormal): Funct
         parameter2 is UnaryMinusFormal                                   ->
             -(simplifyFormal(parameter1) * simplifyFormal(parameter2.parameter))
 
-        parameter1 is MultiplicationFormal                               ->
-            simplifyMultiplication(parameter1, parameter2)
-
-        parameter2 is MultiplicationFormal                               ->
-            simplifyMultiplication(parameter2, parameter1)
-
         else                                                             ->
-            simplifyFormal(parameter1) * simplifyFormal(parameter2)
+            simplifyMultipleMultiplications(parameter1, parameter2)
     }
 }
 
-private fun simplifyMultiplication(multiplication: MultiplicationFormal, function: FunctionFormal<*>): FunctionFormal<*>
+private fun simplifyMultipleMultiplications(parameter1:FunctionFormal<*>, parameter2:FunctionFormal<*>): FunctionFormal<*>
 {
-    val parameter1 = multiplication.parameter1
-    val parameter2 = multiplication.parameter2
+  val collect = SortedArray<FunctionFormal<*>>()
+  val stack = Stack<FunctionFormal<*>>()
+  stack.push(parameter1)
+  stack.push(parameter2)
 
-    return when
+  while (stack.isNotEmpty())
+  {
+      val function = stack.pop()
+
+      if(function is MultiplicationFormal)
+      {
+          stack.push(function.parameter1)
+          stack.push(function.parameter2)
+      }
+      else
+      {
+          collect.add(function)
+      }
+  }
+    var result : FunctionFormal<*> = ONE
+
+    for(function in collect)
     {
-        parameter1 == ZERO                                 ->
-            ZERO
+        result = when
+        {
+            result == ONE ->
+                simplifyFormal(function)
 
-        parameter2 == ZERO                                 ->
-            ZERO
+            result is ConstantFormal && function is ConstantFormal ->
+                (result.value * function.value).constant
 
-        parameter1 == ONE                                  ->
-            simplifyFormal(parameter2 * function)
-
-        parameter2 == ONE                                  ->
-            simplifyFormal(parameter1 * function)
-
-        parameter1 == MINUS_ONE                            ->
-            -(simplifyFormal(parameter2 * function))
-
-        parameter2 == MINUS_ONE                            ->
-            -(simplifyFormal(parameter1 * function))
-
-        parameter1 is ConstantFormal                       ->
-            parameter1 * simplifyFormal(parameter2 * function)
-
-        parameter2 is ConstantFormal                       ->
-            parameter2 * simplifyFormal(parameter1 * function)
-
-        function is MultiplicationFormal                   ->
-            simplifyMultiplicationOfMultiplication(parameter1, parameter2, function.parameter1, function.parameter2)
-
-        else                                               ->
-            simplifyFormal(parameter1) * simplifyFormal(parameter2) * simplifyFormal(function)
+            else ->
+                result * simplifyFormal(function)
+        }
     }
+
+  return result
 }
-
-private fun simplifyMultiplicationOfMultiplication(parameter11: FunctionFormal<*>, parameter12: FunctionFormal<*>,
-                                                   parameter21: FunctionFormal<*>, parameter22: FunctionFormal<*>): FunctionFormal<*> =
-    when
-    {
-        parameter11 == ZERO || parameter12 == ZERO || parameter21 == ZERO || parameter22 == ZERO                                         ->
-            ZERO
-
-        parameter11 is ConstantFormal && parameter12 is ConstantFormal && parameter21 is ConstantFormal && parameter22 is ConstantFormal ->
-            (parameter11.value * parameter12.value * parameter21.value * parameter22.value).constant
-
-        parameter11 is ConstantFormal && parameter12 is ConstantFormal && parameter21 is ConstantFormal                                  ->
-            (parameter11.value * parameter12.value * parameter21.value).constant * simplifyFormal(parameter22)
-
-        parameter11 is ConstantFormal && parameter12 is ConstantFormal && parameter22 is ConstantFormal                                  ->
-            (parameter11.value * parameter12.value * parameter22.value).constant * simplifyFormal(parameter21)
-
-        parameter11 is ConstantFormal && parameter21 is ConstantFormal && parameter22 is ConstantFormal                                  ->
-            (parameter11.value * parameter21.value * parameter22.value).constant * simplifyFormal(parameter12)
-
-        parameter12 is ConstantFormal && parameter21 is ConstantFormal && parameter22 is ConstantFormal                                  ->
-            (parameter12.value * parameter21.value * parameter22.value).constant * simplifyFormal(parameter11)
-
-        parameter11 is ConstantFormal && parameter12 is ConstantFormal                                                                   ->
-            (parameter11.value * parameter12.value).constant * simplifyFormal(parameter21 * parameter22)
-
-        parameter11 is ConstantFormal && parameter21 is ConstantFormal                                                                   ->
-            (parameter11.value * parameter21.value).constant * simplifyFormal(parameter12 * parameter22)
-
-        parameter11 is ConstantFormal && parameter22 is ConstantFormal                                                                   ->
-            (parameter11.value * parameter22.value).constant * simplifyFormal(parameter12 * parameter21)
-
-        parameter12 is ConstantFormal && parameter21 is ConstantFormal                                                                   ->
-            (parameter12.value * parameter21.value).constant * simplifyFormal(parameter11 * parameter22)
-
-        parameter12 is ConstantFormal && parameter22 is ConstantFormal                                                                   ->
-            (parameter12.value * parameter22.value).constant * simplifyFormal(parameter11 * parameter21)
-
-        parameter21 is ConstantFormal && parameter22 is ConstantFormal                                                                   ->
-            (parameter21.value * parameter22.value).constant * simplifyFormal(parameter11 * parameter12)
-
-        else                                                                                                                             ->
-            simplifyFormal(simplifyFormal(parameter11) * simplifyFormal(parameter22)) * simplifyFormal(simplifyFormal(parameter12) * simplifyFormal(parameter21))
-    }

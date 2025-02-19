@@ -11,6 +11,7 @@ import fr.jhelp.tools.mathformal.dsl.Z
 import fr.jhelp.tools.mathformal.dsl.ZERO
 import fr.jhelp.tools.mathformal.dsl.constant
 import fr.jhelp.tools.mathformal.dsl.cos
+import fr.jhelp.tools.mathformal.dsl.div
 import fr.jhelp.tools.mathformal.dsl.minus
 import fr.jhelp.tools.mathformal.dsl.plus
 import fr.jhelp.tools.mathformal.dsl.sin
@@ -31,7 +32,9 @@ class SimplifierFormalTests
         X + 3 - (X - 3) to 6.constant,
         X + Y - cos(Z + sin(W - UNDEFINED)) to UNDEFINED,
         3 * X + 2 * Y + 2 * X to 5 * X + 2 * Y,
-        3 * X + 2 * Y - 2 * X to X + 2 * Y
+        3 * X + 2 * Y - 2 * X to X + 2 * Y,
+        (10 * X * Y) / (2 * X) to (5 * Y),
+        (10 * X * Y) / sin(PI) to UNDEFINED
                                            )
 
     @Test

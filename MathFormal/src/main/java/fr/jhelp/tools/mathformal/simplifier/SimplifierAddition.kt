@@ -3,6 +3,7 @@ package fr.jhelp.tools.mathformal.simplifier
 import fr.jhelp.tools.mathformal.AdditionFormal
 import fr.jhelp.tools.mathformal.ConstantFormal
 import fr.jhelp.tools.mathformal.CosineFormal
+import fr.jhelp.tools.mathformal.DivisionFormal
 import fr.jhelp.tools.mathformal.FunctionFormal
 import fr.jhelp.tools.mathformal.MultiplicationFormal
 import fr.jhelp.tools.mathformal.SineFormal
@@ -12,6 +13,7 @@ import fr.jhelp.tools.mathformal.dsl.ONE
 import fr.jhelp.tools.mathformal.dsl.ZERO
 import fr.jhelp.tools.mathformal.dsl.constant
 import fr.jhelp.tools.mathformal.dsl.cos
+import fr.jhelp.tools.mathformal.dsl.div
 import fr.jhelp.tools.mathformal.dsl.minus
 import fr.jhelp.tools.mathformal.dsl.plus
 import fr.jhelp.tools.mathformal.dsl.sin
@@ -51,26 +53,35 @@ internal fun simplifyAddition(addition: AdditionFormal): FunctionFormal<*>
         {
             val factorization = tryFactorizeSum(addition)
 
-            if(addition == factorization)
+            if (addition == factorization)
             {
                 when
                 {
-                    parameter1 is AdditionFormal && parameter2 is AdditionFormal     ->
+                    parameter1 is AdditionFormal && parameter2 is AdditionFormal ->
                         simplifyAddition(parameter1, parameter2)
 
-                    parameter1 is AdditionFormal                                     ->
+                    parameter1 is AdditionFormal                                 ->
                         simplifyFormal(parameter1.parameter1) + simplifyFormal(parameter1.parameter2 + parameter2)
 
-                    parameter2 is AdditionFormal                                     ->
+                    parameter2 is AdditionFormal                                 ->
                         simplifyFormal(parameter2.parameter1) + simplifyFormal(parameter2.parameter2 + parameter1)
 
-                    parameter1 is MultiplicationFormal                               ->
+                    parameter1 is MultiplicationFormal                           ->
                         simplifyAddition(parameter1, parameter2)
 
-                    parameter2 is MultiplicationFormal                               ->
+                    parameter2 is MultiplicationFormal                           ->
                         simplifyAddition(parameter2, parameter1)
 
-                    else ->
+                    parameter1 is DivisionFormal  && parameter2 is DivisionFormal ->
+                        simplifyAddition(parameter1, parameter2)
+
+                    parameter1 is DivisionFormal ->
+                        simplifyAddition(parameter2, parameter1)
+
+                    parameter2 is DivisionFormal ->
+                        simplifyAddition(parameter1, parameter2)
+
+                    else                                                         ->
                         simplifyFormal(parameter1) + simplifyFormal(parameter2)
                 }
             }
@@ -184,16 +195,16 @@ private fun simplifyAddition(multiplicationFormal: MultiplicationFormal, functio
 
     return when
     {
-        function is MultiplicationFormal                   ->
+        function is MultiplicationFormal ->
             simplifyAdditionOfMultiplications(parameter1, parameter2, function.parameter1, function.parameter2)
 
-        parameter1 == function                             ->
+        parameter1 == function           ->
             simplifyFormal(function * (parameter2 + ONE))
 
-        parameter2 == function                             ->
+        parameter2 == function           ->
             simplifyFormal(function * (parameter1 + ONE))
 
-        else                                               ->
+        else                             ->
             simplifyFormal(multiplicationFormal) + simplifyFormal(function)
     }
 }
@@ -263,7 +274,7 @@ private fun simplifyCosCos_SinSin(cosine1: CosineFormal, cosine2: CosineFormal, 
         parameterCos1 == parameterSin2 && parameterCos2 == parameterSin1 ->
             cos(simplifyFormal(parameterCos1 - parameterCos2))
 
-        else ->
+        else                                                             ->
             simplifyFormal(cosine1) * simplifyFormal(cosine2) + simplifyFormal(sine1) * simplifyFormal(sine2)
     }
 }
@@ -281,7 +292,13 @@ private fun simplifyCosSin_CosSin(cosine1: CosineFormal, sine1: SineFormal, cosi
         parameterCos1 == parameterSin2 && parameterCos2 == parameterSin1 ->
             sin(simplifyFormal(parameterCos1 + parameterCos2))
 
-        else ->
+        else                                                             ->
             simplifyFormal(cosine1) * simplifyFormal(sine1) + simplifyFormal(cosine2) * simplifyFormal(sine2)
     }
 }
+
+private fun simplifyAddition(division1: DivisionFormal, division2: DivisionFormal): FunctionFormal<*> =
+    simplifyFormal(((division1.parameter1 * division2.parameter2) + (division2.parameter1 * division1.parameter2)) / (division1.parameter2 * division2.parameter2))
+
+private fun simplifyAddition(function:FunctionFormal<*>, division: DivisionFormal): FunctionFormal<*> =
+    simplifyFormal((function * division.parameter2 + division.parameter1) / division.parameter2)

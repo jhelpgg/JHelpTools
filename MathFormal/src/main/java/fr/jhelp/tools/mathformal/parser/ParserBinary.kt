@@ -1,6 +1,7 @@
 package fr.jhelp.tools.mathformal.parser
 
 import fr.jhelp.tools.mathformal.BinaryOperatorFormal
+import fr.jhelp.tools.mathformal.dsl.div
 import fr.jhelp.tools.mathformal.dsl.minus
 import fr.jhelp.tools.mathformal.dsl.plus
 import fr.jhelp.tools.mathformal.dsl.times
@@ -8,7 +9,7 @@ import java.util.Optional
 
 // Order in priority (most priority first)
 // Don't forget to complete last when in parseBinary
-private val operatorsSymbols = charArrayOf('*', '+', '-')
+private val operatorsSymbols = charArrayOf('/', '*', '+', '-')
 
 internal fun parseBinary(string: String): Optional<BinaryOperatorFormal<*>>
 {
@@ -37,6 +38,7 @@ internal fun parseBinary(string: String): Optional<BinaryOperatorFormal<*>>
         '+'  -> Optional.of(parseFormal(parameter1) + parseFormal(parameter2))
         '-'  -> Optional.of(parseFormal(parameter1) - parseFormal(parameter2))
         '*'  -> Optional.of(parseFormal(parameter1) * parseFormal(parameter2))
+        '/'  -> Optional.of(parseFormal(parameter1) / parseFormal(parameter2))
         else -> Optional.empty()
     }
 }

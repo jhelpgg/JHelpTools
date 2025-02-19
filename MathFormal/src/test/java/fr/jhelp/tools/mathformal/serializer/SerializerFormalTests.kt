@@ -9,6 +9,7 @@ import fr.jhelp.tools.mathformal.dsl.Y
 import fr.jhelp.tools.mathformal.dsl.Z
 import fr.jhelp.tools.mathformal.dsl.constant
 import fr.jhelp.tools.mathformal.dsl.cos
+import fr.jhelp.tools.mathformal.dsl.div
 import fr.jhelp.tools.mathformal.dsl.minus
 import fr.jhelp.tools.mathformal.dsl.plus
 import fr.jhelp.tools.mathformal.dsl.sin
@@ -33,6 +34,8 @@ class SerializerFormalTests
         X * Y to "x * y",
         Z * 4 to "4.0z",
         (3 * X) + (4 * Y) to "(3.0x) + (4.0y)",
+        (3 / Y) to "3.0 / y",
+        cos(PI / T) to "cos(PI / t)"
                                       )
 
     @Test

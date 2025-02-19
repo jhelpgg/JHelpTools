@@ -18,7 +18,7 @@ import fr.jhelp.tools.mathformal.dsl.cos
 import fr.jhelp.tools.mathformal.dsl.minus
 import fr.jhelp.tools.mathformal.dsl.plus
 import fr.jhelp.tools.mathformal.dsl.sin
-import fr.jhelp.tools.mathformal.dsl.times
+import fr.jhelp.tools.mathformal.dsl.*
 import fr.jhelp.tools.test.assertInstance
 import fr.jhelp.tools.utilities.math.EPSILON
 import org.junit.Assert
@@ -38,7 +38,9 @@ class ParserFormalTests
         "x - y + z" to X - (Y + Z),
         "x * y" to X * Y,
         "3x + 4y" to (3 * X) + (4 * Y),
-        "3x + 4y - z * t" to (3 * X) + (4 * Y) - (Z * "t"),
+        "3x + 4y - z * t" to (3 * X) + (4 * Y) - (Z * T),
+        "3 / y" to (3 / Y),
+        "cos(PI / t)" to cos(PI / T)
                                   )
 
     @Test

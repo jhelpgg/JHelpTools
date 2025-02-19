@@ -3,6 +3,7 @@ package fr.jhelp.tools.mathformal.simplifier
 import fr.jhelp.tools.mathformal.AdditionFormal
 import fr.jhelp.tools.mathformal.ConstantFormal
 import fr.jhelp.tools.mathformal.CosineFormal
+import fr.jhelp.tools.mathformal.DivisionFormal
 import fr.jhelp.tools.mathformal.FunctionFormal
 import fr.jhelp.tools.mathformal.MultiplicationFormal
 import fr.jhelp.tools.mathformal.SineFormal
@@ -12,6 +13,7 @@ import fr.jhelp.tools.mathformal.dsl.ONE
 import fr.jhelp.tools.mathformal.dsl.ZERO
 import fr.jhelp.tools.mathformal.dsl.constant
 import fr.jhelp.tools.mathformal.dsl.cos
+import fr.jhelp.tools.mathformal.dsl.div
 import fr.jhelp.tools.mathformal.dsl.minus
 import fr.jhelp.tools.mathformal.dsl.plus
 import fr.jhelp.tools.mathformal.dsl.sin
@@ -61,19 +63,28 @@ internal fun simplifySubtraction(subtraction: SubtractionFormal): FunctionFormal
             {
                 when
                 {
-                    parameter1 is AdditionFormal       ->
+                    parameter1 is AdditionFormal                                 ->
                         simplifySubtraction(parameter1, parameter2)
 
-                    parameter2 is AdditionFormal       ->
+                    parameter2 is AdditionFormal                                 ->
                         simplifySubtraction(parameter1, parameter2)
 
-                    parameter1 is MultiplicationFormal ->
+                    parameter1 is MultiplicationFormal                           ->
                         simplifySubtraction(parameter1, parameter2)
 
-                    parameter2 is MultiplicationFormal ->
+                    parameter2 is MultiplicationFormal                           ->
                         simplifySubtraction(parameter1, parameter2)
 
-                    else                               ->
+                    parameter1 is DivisionFormal && parameter2 is DivisionFormal ->
+                        simplifySubtraction(parameter1, parameter2)
+
+                    parameter1 is DivisionFormal                                 ->
+                        simplifySubtraction(parameter1, parameter2)
+
+                    parameter2 is DivisionFormal                                 ->
+                        simplifySubtraction(parameter1, parameter2)
+
+                    else                                                         ->
                         simplifyFormal(parameter1) - simplifyFormal(parameter2)
                 }
             }
@@ -502,3 +513,11 @@ private fun simplifyCosSin_CosSin(cosine1: CosineFormal, sine1: SineFormal, cosi
     }
 }
 
+private fun simplifySubtraction(division1: DivisionFormal, division2: DivisionFormal): FunctionFormal<*> =
+    simplifyFormal(((division1.parameter1 * division2.parameter2) - (division2.parameter1 * division1.parameter2)) / (division1.parameter2 * division2.parameter2))
+
+private fun simplifySubtraction(function: FunctionFormal<*>, division: DivisionFormal): FunctionFormal<*> =
+    simplifyFormal((function * division.parameter2 - division.parameter1) / division.parameter2)
+
+private fun simplifySubtraction(division: DivisionFormal, function: FunctionFormal<*>): FunctionFormal<*> =
+    simplifyFormal((division.parameter1 - function * division.parameter2) / division.parameter2)

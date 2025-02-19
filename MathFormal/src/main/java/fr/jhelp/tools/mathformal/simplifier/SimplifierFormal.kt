@@ -3,6 +3,7 @@ package fr.jhelp.tools.mathformal.simplifier
 import fr.jhelp.tools.mathformal.AdditionFormal
 import fr.jhelp.tools.mathformal.ConstantFormal
 import fr.jhelp.tools.mathformal.CosineFormal
+import fr.jhelp.tools.mathformal.DivisionFormal
 import fr.jhelp.tools.mathformal.FunctionFormal
 import fr.jhelp.tools.mathformal.MultiplicationFormal
 import fr.jhelp.tools.mathformal.SineFormal
@@ -27,6 +28,7 @@ internal fun simplifyFormal(functionFormal: FunctionFormal<*>): FunctionFormal<*
         is AdditionFormal       -> simplifyAddition(simplified)
         is SubtractionFormal    -> simplifySubtraction(simplified)
         is MultiplicationFormal -> simplifyMultiplication(simplified)
+        is DivisionFormal       -> simplifyDivision(simplified)
     }
 }
 
