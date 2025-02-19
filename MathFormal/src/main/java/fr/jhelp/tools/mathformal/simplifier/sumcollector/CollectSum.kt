@@ -3,7 +3,6 @@ package fr.jhelp.tools.mathformal.simplifier.sumcollector
 import fr.jhelp.tools.mathformal.AdditionFormal
 import fr.jhelp.tools.mathformal.FunctionFormal
 import fr.jhelp.tools.mathformal.SubtractionFormal
-import fr.jhelp.tools.mathformal.dsl.UNDEFINED
 import java.util.Stack
 
 /**
@@ -14,20 +13,20 @@ import java.util.Stack
  * @param functionFormal Function where we want to collect the sum
  * @return List of elements of the sum
  */
-internal fun collectSum(functionFormal: FunctionFormal<*>) : MutableList<SumCollectedElement>
+internal fun collectSum(functionFormal: FunctionFormal<*>): MutableList<SumCollectedElement>
 {
     val list = ArrayList<SumCollectedElement>()
     val stack = Stack<SumCollectedElement>()
-    stack.push(SumCollectedElement(functionFormal, positive=true))
+    stack.push(SumCollectedElement(functionFormal, positive = true))
 
-    while(stack.isNotEmpty())
+    while (stack.isNotEmpty())
     {
         val collected = stack.pop()
         val function = collected.functionFormal
 
-        when(function)
+        when (function)
         {
-            is AdditionFormal ->
+            is AdditionFormal    ->
             {
                 stack.push(SumCollectedElement(function.parameter1, collected.positive))
                 stack.push(SumCollectedElement(function.parameter2, collected.positive))
@@ -39,7 +38,7 @@ internal fun collectSum(functionFormal: FunctionFormal<*>) : MutableList<SumColl
                 stack.push(SumCollectedElement(function.parameter2, !collected.positive))
             }
 
-            else ->
+            else                 ->
                 list.add(collected)
         }
     }

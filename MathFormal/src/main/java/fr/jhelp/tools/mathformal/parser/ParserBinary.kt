@@ -7,8 +7,10 @@ import fr.jhelp.tools.mathformal.dsl.plus
 import fr.jhelp.tools.mathformal.dsl.times
 import java.util.Optional
 
-// Order in priority (most priority first)
-// Don't forget to complete last when in parseBinary
+/*
+ Order in priority (most priority first)
+ Don't forget to complete last when in parseBinary
+*/
 private val operatorsSymbols = charArrayOf('/', '*', '+', '-')
 
 internal fun parseBinary(string: String): Optional<BinaryOperatorFormal<*>>

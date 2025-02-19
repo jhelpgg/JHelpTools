@@ -9,16 +9,19 @@ import fr.jhelp.tools.mathformal.SubtractionFormal
 import fr.jhelp.tools.mathformal.UnaryMinusFormal
 import fr.jhelp.tools.mathformal.VariableFormal
 import fr.jhelp.tools.mathformal.dsl.PI
+import fr.jhelp.tools.mathformal.dsl.T
 import fr.jhelp.tools.mathformal.dsl.UNDEFINED
+import fr.jhelp.tools.mathformal.dsl.W
 import fr.jhelp.tools.mathformal.dsl.X
 import fr.jhelp.tools.mathformal.dsl.Y
 import fr.jhelp.tools.mathformal.dsl.Z
 import fr.jhelp.tools.mathformal.dsl.constant
 import fr.jhelp.tools.mathformal.dsl.cos
+import fr.jhelp.tools.mathformal.dsl.div
 import fr.jhelp.tools.mathformal.dsl.minus
 import fr.jhelp.tools.mathformal.dsl.plus
 import fr.jhelp.tools.mathformal.dsl.sin
-import fr.jhelp.tools.mathformal.dsl.*
+import fr.jhelp.tools.mathformal.dsl.times
 import fr.jhelp.tools.test.assertInstance
 import fr.jhelp.tools.utilities.math.EPSILON
 import org.junit.Assert
@@ -40,7 +43,8 @@ class ParserFormalTests
         "3x + 4y" to (3 * X) + (4 * Y),
         "3x + 4y - z * t" to (3 * X) + (4 * Y) - (Z * T),
         "3 / y" to (3 / Y),
-        "cos(PI / t)" to cos(PI / T)
+        "cos(PI / t)" to cos(PI / T),
+        "x + y - z * t / w" to (X + Y) - (T / W) * Z,
                                   )
 
     @Test
