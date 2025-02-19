@@ -34,7 +34,19 @@ class SimplifierFormalTests
         3 * X + 2 * Y + 2 * X to 5 * X + 2 * Y,
         3 * X + 2 * Y - 2 * X to X + 2 * Y,
         (10 * X * Y) / (2 * X) to (5 * Y),
-        (10 * X * Y) / sin(PI) to UNDEFINED
+        (10 * X * Y) / sin(PI) to UNDEFINED,
+        X + 0 to X,
+        0 + X to X,
+        X - 0 to X,
+        0 - X to -X,
+        X * 0 to ZERO,
+        0 * X to ZERO,
+        X * 1 to X,
+        1 * X to X,
+        X / 1 to X,
+        1 / X to ONE / X,
+        3 * X * 5 * Y to 15 * X * Y,
+        (X / 3) * (3 / Y) to X / Y
                                            )
 
     @Test
