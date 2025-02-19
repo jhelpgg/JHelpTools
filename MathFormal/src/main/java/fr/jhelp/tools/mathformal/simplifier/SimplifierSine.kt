@@ -4,7 +4,6 @@ import fr.jhelp.tools.mathformal.ConstantFormal
 import fr.jhelp.tools.mathformal.FunctionFormal
 import fr.jhelp.tools.mathformal.SineFormal
 import fr.jhelp.tools.mathformal.UnaryMinusFormal
-import fr.jhelp.tools.mathformal.dsl.UNDEFINED
 import fr.jhelp.tools.mathformal.dsl.constant
 import fr.jhelp.tools.mathformal.dsl.sin
 import fr.jhelp.tools.mathformal.dsl.unaryMinus
@@ -16,7 +15,6 @@ internal fun simplifySine(sine: SineFormal): FunctionFormal<*>
 
     return when (parameter)
     {
-        UNDEFINED           -> UNDEFINED
         is ConstantFormal   -> constant(sin(parameter.value))
         is UnaryMinusFormal -> -sin(simplifyFormal(parameter.parameter))
         else                -> sin(simplifyFormal(parameter))

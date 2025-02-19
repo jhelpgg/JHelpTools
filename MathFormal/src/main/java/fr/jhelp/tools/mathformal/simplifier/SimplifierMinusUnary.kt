@@ -5,7 +5,6 @@ import fr.jhelp.tools.mathformal.FunctionFormal
 import fr.jhelp.tools.mathformal.UnaryMinusFormal
 import fr.jhelp.tools.mathformal.dsl.MINUS_ONE
 import fr.jhelp.tools.mathformal.dsl.ONE
-import fr.jhelp.tools.mathformal.dsl.UNDEFINED
 import fr.jhelp.tools.mathformal.dsl.ZERO
 import fr.jhelp.tools.mathformal.dsl.constant
 import fr.jhelp.tools.mathformal.dsl.unaryMinus
@@ -16,7 +15,6 @@ internal fun simplifyMinusUnary(minusUnary: UnaryMinusFormal): FunctionFormal<*>
 
     return when (parameter)
     {
-        UNDEFINED           -> UNDEFINED
         ZERO                -> ZERO
         ONE                 -> MINUS_ONE
         MINUS_ONE           -> ONE

@@ -9,7 +9,6 @@ import fr.jhelp.tools.mathformal.SineFormal
 import fr.jhelp.tools.mathformal.SubtractionFormal
 import fr.jhelp.tools.mathformal.UnaryMinusFormal
 import fr.jhelp.tools.mathformal.dsl.ONE
-import fr.jhelp.tools.mathformal.dsl.UNDEFINED
 import fr.jhelp.tools.mathformal.dsl.ZERO
 import fr.jhelp.tools.mathformal.dsl.constant
 import fr.jhelp.tools.mathformal.dsl.cos
@@ -18,6 +17,7 @@ import fr.jhelp.tools.mathformal.dsl.plus
 import fr.jhelp.tools.mathformal.dsl.sin
 import fr.jhelp.tools.mathformal.dsl.times
 import fr.jhelp.tools.mathformal.dsl.unaryMinus
+import fr.jhelp.tools.mathformal.simplifier.sumcollector.tryFactorizeSum
 
 internal fun simplifyAddition(addition: AdditionFormal): FunctionFormal<*>
 {
@@ -26,9 +26,6 @@ internal fun simplifyAddition(addition: AdditionFormal): FunctionFormal<*>
 
     return when
     {
-        parameter1 == UNDEFINED || parameter2 == UNDEFINED               ->
-            UNDEFINED
-
         parameter1 == ZERO                                               ->
             simplifyFormal(parameter2)
 
@@ -50,23 +47,38 @@ internal fun simplifyAddition(addition: AdditionFormal): FunctionFormal<*>
         parameter2 is UnaryMinusFormal                                   ->
             simplifyFormal(parameter1) - simplifyFormal(parameter2.parameter)
 
-        parameter1 is AdditionFormal && parameter2 is AdditionFormal     ->
-            simplifyAddition(parameter1, parameter2)
-
-        parameter1 is AdditionFormal                                     ->
-            simplifyFormal(parameter1.parameter1) + simplifyFormal(parameter1.parameter2 + parameter2)
-
-        parameter2 is AdditionFormal                                     ->
-            simplifyFormal(parameter2.parameter1) + simplifyFormal(parameter2.parameter2 + parameter1)
-
-        parameter1 is MultiplicationFormal                               ->
-            simplifyAddition(parameter1, parameter2)
-
-        parameter2 is MultiplicationFormal                               ->
-            simplifyAddition(parameter2, parameter1)
-
         else                                                             ->
-            simplifyFormal(parameter1) + simplifyFormal(parameter2)
+        {
+            val factorization = tryFactorizeSum(addition)
+
+            if(addition == factorization)
+            {
+                when
+                {
+                    parameter1 is AdditionFormal && parameter2 is AdditionFormal     ->
+                        simplifyAddition(parameter1, parameter2)
+
+                    parameter1 is AdditionFormal                                     ->
+                        simplifyFormal(parameter1.parameter1) + simplifyFormal(parameter1.parameter2 + parameter2)
+
+                    parameter2 is AdditionFormal                                     ->
+                        simplifyFormal(parameter2.parameter1) + simplifyFormal(parameter2.parameter2 + parameter1)
+
+                    parameter1 is MultiplicationFormal                               ->
+                        simplifyAddition(parameter1, parameter2)
+
+                    parameter2 is MultiplicationFormal                               ->
+                        simplifyAddition(parameter2, parameter1)
+
+                    else ->
+                        simplifyFormal(parameter1) + simplifyFormal(parameter2)
+                }
+            }
+            else
+            {
+                factorization
+            }
+        }
     }
 }
 
@@ -86,9 +98,6 @@ private fun simplifyAddition(constant: ConstantFormal, other: FunctionFormal<*>)
 
             when
             {
-                parameter21 == UNDEFINED || parameter22 == UNDEFINED           ->
-                    UNDEFINED
-
                 parameter21 is ConstantFormal && parameter22 is ConstantFormal ->
                     constant(constant.value + parameter21.value + parameter22.value)
 
@@ -111,9 +120,6 @@ private fun simplifyAddition(constant: ConstantFormal, other: FunctionFormal<*>)
 
             when
             {
-                parameter21 == UNDEFINED || parameter22 == UNDEFINED           ->
-                    UNDEFINED
-
                 // C + (C1 - C2)
                 parameter21 is ConstantFormal && parameter22 is ConstantFormal ->
                     constant(constant.value + parameter21.value - parameter22.value)
@@ -149,11 +155,6 @@ private fun simplifyAddition(addition1: AdditionFormal, addition2: AdditionForma
     {
         val parameter = iterator.next()
 
-        if (parameter == UNDEFINED)
-        {
-            return UNDEFINED
-        }
-
         if (parameter is ConstantFormal)
         {
             constant = constant(constant.value + parameter.value)
@@ -183,9 +184,6 @@ private fun simplifyAddition(multiplicationFormal: MultiplicationFormal, functio
 
     return when
     {
-        parameter1 == UNDEFINED || parameter2 == UNDEFINED ->
-            UNDEFINED
-
         function is MultiplicationFormal                   ->
             simplifyAdditionOfMultiplications(parameter1, parameter2, function.parameter1, function.parameter2)
 
@@ -205,9 +203,6 @@ private fun simplifyAdditionOfMultiplications(parameter11: FunctionFormal<*>, pa
                                               parameter21: FunctionFormal<*>, parameter22: FunctionFormal<*>): FunctionFormal<*> =
     when
     {
-        parameter11 == UNDEFINED || parameter12 == UNDEFINED || parameter21 == UNDEFINED || parameter22 == UNDEFINED         ->
-            UNDEFINED
-
         // f1.f2 + f1.f4 -> f1.(f2 + f4)
         parameter11 == parameter21                                                                                           ->
             simplifyFormal(parameter11 * (parameter12 + parameter22))
@@ -256,9 +251,6 @@ private fun simplifyCosCos_SinSin(cosine1: CosineFormal, cosine2: CosineFormal, 
 
     return when
     {
-        parameterCos1 == UNDEFINED || parameterCos2 == UNDEFINED || parameterSin1 == UNDEFINED || parameterSin2 == UNDEFINED ->
-            UNDEFINED
-
         // cos(f) * cos(f) + sin(f) * sin(f)   -> 1
         parameterCos1 == parameterCos2 && parameterSin1 == parameterSin2 ->
             ONE
@@ -285,9 +277,6 @@ private fun simplifyCosSin_CosSin(cosine1: CosineFormal, sine1: SineFormal, cosi
 
     return when
     {
-        parameterCos1 == UNDEFINED || parameterCos2 == UNDEFINED || parameterSin1 == UNDEFINED || parameterSin2 == UNDEFINED ->
-            UNDEFINED
-
         // cos(f1) * sin(f2) + cos(f2) * sin(f1)   -> sin(f1+f2)
         parameterCos1 == parameterSin2 && parameterCos2 == parameterSin1 ->
             sin(simplifyFormal(parameterCos1 + parameterCos2))

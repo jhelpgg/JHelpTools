@@ -6,7 +6,6 @@ import fr.jhelp.tools.mathformal.MultiplicationFormal
 import fr.jhelp.tools.mathformal.UnaryMinusFormal
 import fr.jhelp.tools.mathformal.dsl.MINUS_ONE
 import fr.jhelp.tools.mathformal.dsl.ONE
-import fr.jhelp.tools.mathformal.dsl.UNDEFINED
 import fr.jhelp.tools.mathformal.dsl.ZERO
 import fr.jhelp.tools.mathformal.dsl.constant
 import fr.jhelp.tools.mathformal.dsl.times
@@ -19,9 +18,6 @@ internal fun simplifyMultiplication(multiplication: MultiplicationFormal): Funct
 
     return when
     {
-        parameter1 == UNDEFINED || parameter2 == UNDEFINED               ->
-            UNDEFINED
-
         parameter1 == ZERO                                               ->
             ZERO
 
@@ -70,9 +66,6 @@ private fun simplifyMultiplication(multiplication: MultiplicationFormal, functio
 
     return when
     {
-        parameter1 == UNDEFINED || parameter2 == UNDEFINED ->
-            UNDEFINED
-
         parameter1 == ZERO                                 ->
             ZERO
 
@@ -109,9 +102,6 @@ private fun simplifyMultiplicationOfMultiplication(parameter11: FunctionFormal<*
                                                    parameter21: FunctionFormal<*>, parameter22: FunctionFormal<*>): FunctionFormal<*> =
     when
     {
-        parameter11 == UNDEFINED || parameter12 == UNDEFINED || parameter21 == UNDEFINED || parameter22 == UNDEFINED                     ->
-            UNDEFINED
-
         parameter11 == ZERO || parameter12 == ZERO || parameter21 == ZERO || parameter22 == ZERO                                         ->
             ZERO
 

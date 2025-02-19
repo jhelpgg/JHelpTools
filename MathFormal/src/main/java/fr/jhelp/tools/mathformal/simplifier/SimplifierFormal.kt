@@ -9,20 +9,26 @@ import fr.jhelp.tools.mathformal.SineFormal
 import fr.jhelp.tools.mathformal.SubtractionFormal
 import fr.jhelp.tools.mathformal.UnaryMinusFormal
 import fr.jhelp.tools.mathformal.VariableFormal
+import fr.jhelp.tools.mathformal.dsl.UNDEFINED
 import java.util.TreeSet
 
-fun simplifyFormal(functionFormal: FunctionFormal<*>): FunctionFormal<*> =
-    when (functionFormal)
+internal fun simplifyFormal(functionFormal: FunctionFormal<*>): FunctionFormal<*>
+{
+    val simplified = undefinedSimplifier(functionFormal)
+
+    return when (simplified)
     {
-        is ConstantFormal    -> functionFormal
-        is VariableFormal    -> functionFormal
-        is UnaryMinusFormal  -> simplifyMinusUnary(functionFormal)
-        is CosineFormal      -> simplifyCosine(functionFormal)
-        is SineFormal        -> simplifySine(functionFormal)
-        is AdditionFormal    -> simplifyAddition(functionFormal)
-        is SubtractionFormal -> simplifySubtraction(functionFormal)
-        is MultiplicationFormal -> simplifyMultiplication(functionFormal)
+        UNDEFINED               -> UNDEFINED
+        is ConstantFormal       -> simplified
+        is VariableFormal       -> simplified
+        is UnaryMinusFormal     -> simplifyMinusUnary(simplified)
+        is CosineFormal         -> simplifyCosine(simplified)
+        is SineFormal           -> simplifySine(simplified)
+        is AdditionFormal       -> simplifyAddition(simplified)
+        is SubtractionFormal    -> simplifySubtraction(simplified)
+        is MultiplicationFormal -> simplifyMultiplication(simplified)
     }
+}
 
 val FunctionFormal<*>.simplified: FunctionFormal<*> get() = this.simplify()
 
