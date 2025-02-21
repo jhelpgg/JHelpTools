@@ -1,5 +1,6 @@
 package fr.jhelp.tools.engine3d.dsl
 
+import fr.jhelp.tools.engine3d.annotations.NodeTreeDSL
 import fr.jhelp.tools.engine3d.scene.Clone3D
 import fr.jhelp.tools.engine3d.scene.Node3D
 import fr.jhelp.tools.engine3d.scene.Object3D
@@ -15,11 +16,13 @@ import fr.jhelp.tools.utilities.image.path.Path
 /**
  * Create a node tree
  */
+@NodeTreeDSL
 class NodeTreeCreator internal constructor(private val root: Node3D)
 {
     /**
      * Add node to the node tree
      */
+    @NodeTreeDSL
     fun node(reference: NodeReference = junkReference, node: Node3D.() -> Unit)
     {
         val node3D = Node3D()
@@ -31,6 +34,7 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
     /**
      * Add an object 3D to the tree
      */
+    @NodeTreeDSL
     fun object3D(reference: NodeReference = junkReference,
                  object3D: Object3D.() -> Unit)
     {
@@ -43,6 +47,7 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
     /**
      * Add a clone to the node tree
      */
+    @NodeTreeDSL
     fun clone(reference: NodeReference = junkReference,
               referenceObjectOrClone: NodeReference,
               clone3D: Clone3D.() -> Unit)
@@ -64,6 +69,7 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
     /**
      * Add plane to the node tree
      */
+    @NodeTreeDSL
     fun plane(reference: NodeReference = junkReference,
               startU: Float = 0f, endU: Float = 1f,
               startV: Float = 0f, endV: Float = 1f,
@@ -79,6 +85,7 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
     /**
      * Add a box to the node tree
      */
+    @NodeTreeDSL
     fun box(reference: NodeReference = junkReference,
             boxUV: BoxUVCreator.() -> Unit = {},
             seal: Boolean = true,
@@ -94,6 +101,7 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
     /**
      * Add a revolution
      */
+    @NodeTreeDSL
     fun revolution(reference: NodeReference = junkReference,
                    angle: Float = 360f,
                    multiplierU: Float = 1f, startV: Float = 0f, endV: Float = 1f,
@@ -117,6 +125,7 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
     /**
      * Add a sphere to the node tree
      */
+    @NodeTreeDSL
     fun sphere(reference: NodeReference = junkReference,
                multiplierU: Float = 1f, multiplierV: Float = 1f, slice: Int = 16, slack: Int = 16,
                seal: Boolean = true,
@@ -129,6 +138,7 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
     }
 
     /** Create object that represents a path along an other one */
+    @NodeTreeDSL
     fun objectPath(reference: NodeReference = junkReference,
                    mainPath: Path.() -> Unit, mainPathPrecision: Int = 5,
                    followPath: Path.() -> Unit, followPathPrecision: Int = 5,
@@ -170,6 +180,7 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
      * @throws IllegalArgumentException if `zFunction` depends on more than 2 variables or other variables than `X` and `Y`
      */
     @Throws(IllegalArgumentException::class)
+    @NodeTreeDSL
     fun field(reference: NodeReference = junkReference,
               zFunction: FunctionFormal<*>,
               xStart: Float, xEnd: Float, xNumberSteps: Int,

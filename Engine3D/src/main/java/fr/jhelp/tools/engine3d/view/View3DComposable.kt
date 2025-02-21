@@ -27,11 +27,7 @@ class View3DComposable
         AndroidView<View3D>(
             modifier = modifier,
             factory = { context ->
-                if (this.viewCreated.compareAndSet(false, true))
-                {
-                    this.view = View3D(context)
-                }
-
+                this.view = View3D(context)
                 this.view.tree(scene)
                 this.view
             })
