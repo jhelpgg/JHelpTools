@@ -1,14 +1,15 @@
 package fr.jhelp.tools.engine3d.dsl
 
 import fr.jhelp.tools.engine3d.scene.Clone3D
-import fr.jhelp.tools.engine3d.scene.GREEN
 import fr.jhelp.tools.engine3d.scene.Node3D
 import fr.jhelp.tools.engine3d.scene.Object3D
 import fr.jhelp.tools.engine3d.scene.geometry.Box
+import fr.jhelp.tools.engine3d.scene.geometry.Field3D
 import fr.jhelp.tools.engine3d.scene.geometry.ObjectPath
 import fr.jhelp.tools.engine3d.scene.geometry.Plane
 import fr.jhelp.tools.engine3d.scene.geometry.Revolution
 import fr.jhelp.tools.engine3d.scene.geometry.Sphere
+import fr.jhelp.tools.mathformal.FunctionFormal
 import fr.jhelp.tools.utilities.image.path.Path
 
 /**
@@ -148,5 +149,44 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
         reference.node = objectPathReal
         objectPath(objectPathReal)
         this.root.add(objectPathReal)
+    }
+
+    /**
+     * Add a 3D filed
+     *
+     * @param reference node reference
+     * @param zFunction function that represents `Z`. Must depends only on `X` and/or `Y`
+     * @param xStart start of `X` values
+     * @param xEnd end of `X` values
+     * @param xNumberSteps number of steps for `X`. More steps, more precision but more triangles
+     * @param yStart start of `Y` values
+     * @param yEnd end of `Y` values
+     * @param yNumberSteps number of steps for `Y`. More steps, more precision but more triangles
+     * @param uStart start of `U` values
+     * @param uEnd end of `U` values
+     * @param vStart start of `V` values
+     * @param vEnd end of `V` values
+     * @param seal seal the object or not
+     * @throws IllegalArgumentException if `zFunction` depends on more than 2 variables or other variables than `X` and `Y`
+     */
+    @Throws(IllegalArgumentException::class)
+    fun field(reference: NodeReference = junkReference,
+              zFunction: FunctionFormal<*>,
+              xStart: Float, xEnd: Float, xNumberSteps: Int,
+              yStart: Float, yEnd: Float, yNumberSteps: Int,
+              uStart: Float = 0f, uEnd: Float = 1f,
+              vStart: Float = 0f, vEnd: Float = 1f,
+              seal: Boolean = true,
+              field: Field3D.() -> Unit)
+    {
+        val fieldReal = Field3D(zFunction,
+                                xStart, xEnd, xNumberSteps,
+                                yStart, yEnd, yNumberSteps,
+                                uStart, uEnd,
+                                vStart, vEnd,
+                                seal)
+        reference.node = fieldReal
+        field(fieldReal)
+        this.root.add(fieldReal)
     }
 }
