@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.androidx.ui)
     api(project(":Utilities"))
     api(project(":Video"))
+    api(project(":MathFormal"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

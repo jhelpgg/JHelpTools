@@ -6,9 +6,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import fr.jhelp.tools.R
 import fr.jhelp.tools.engine3d.scene.TextureVideo
-import fr.jhelp.tools.engine3d.scene.geometry.Box
 import fr.jhelp.tools.engine3d.view.View3DComposable
+import fr.jhelp.tools.mathformal.dsl.X
+import fr.jhelp.tools.mathformal.dsl.Y
+import fr.jhelp.tools.mathformal.dsl.cos
+import fr.jhelp.tools.mathformal.dsl.sin
+import fr.jhelp.tools.mathformal.dsl.times
 import fr.jhelp.tools.ui.theme.JHelpToolsTheme
+import fr.jhelp.tools.utilities.math.PI_FLOAT
 import fr.jhelp.tools.utilities.source.SourceRaw
 
 class Engine3DComposable
@@ -21,18 +26,41 @@ class Engine3DComposable
     fun Show(modifier: Modifier = Modifier)
     {
         this.view3DComposable.Draw(modifier) {
-            this.scenePosition { this.z = -2f }
-            val box = Box()
-            box.material.texture = textureVideo
-            this.scene3D.root.add(box)
+            this.scenePosition {
+                this.angleX = -32f
+                this.z = -6f
+            }
 
-            Thread{
+            this.root {
+                this.field(
+                    zFunction = cos(X) * sin(Y),
+                    xStart = -PI_FLOAT, xEnd = PI_FLOAT, xNumberSteps = 25,
+                    yStart = -PI_FLOAT, yEnd = PI_FLOAT, yNumberSteps = 25) {
+                    this.material.texture = textureVideo
+                }
+            }
+
+            Thread {
                 Thread.sleep(1024)
                 textureVideo.play(video)
             }.start()
         }
     }
 }
+/*
+this.scenePosition {
+                    this.angleX = -32f
+                    this.z = -6f
+                }
+                this.root {
+                    this.field(
+                        functionZ = cos(X) * sin(Y),
+                        xStart = -PI_FLOAT, xEnd = PI_FLOAT, numberPartX = 10,
+                        yStart = -PI_FLOAT, yEnd = PI_FLOAT, numberPartY = 10) {
+                        this.material(material)
+                    }
+                }
+ */
 
 @Preview
 @Composable
