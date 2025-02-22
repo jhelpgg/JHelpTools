@@ -18,14 +18,13 @@ import fr.jhelp.tools.utilities.source.SourceRaw
 
 class Engine3DComposable
 {
-    private val view3DComposable = View3DComposable()
     private val textureVideo = TextureVideo()
     private val video = SourceRaw(R.raw.roule)
 
     @Composable
     fun Show(modifier: Modifier = Modifier)
     {
-        this.view3DComposable.Draw(modifier) {
+        View3DComposable(modifier) {
             this.scenePosition {
                 this.angleX = -32f
                 this.z = -6f
@@ -47,20 +46,6 @@ class Engine3DComposable
         }
     }
 }
-/*
-this.scenePosition {
-                    this.angleX = -32f
-                    this.z = -6f
-                }
-                this.root {
-                    this.field(
-                        functionZ = cos(X) * sin(Y),
-                        xStart = -PI_FLOAT, xEnd = PI_FLOAT, numberPartX = 10,
-                        yStart = -PI_FLOAT, yEnd = PI_FLOAT, numberPartY = 10) {
-                        this.material(material)
-                    }
-                }
- */
 
 @Preview
 @Composable

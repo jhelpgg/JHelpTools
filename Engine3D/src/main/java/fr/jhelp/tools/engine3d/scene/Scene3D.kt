@@ -1,5 +1,8 @@
 package fr.jhelp.tools.engine3d.scene
 
+import fr.jhelp.tools.engine3d.animation.Animation
+import fr.jhelp.tools.engine3d.animation.AnimationManager
+import fr.jhelp.tools.engine3d.animation.AnimationPlayer
 import fr.jhelp.tools.engine3d.annotations.OpenGLThread
 import fr.jhelp.tools.engine3d.math.antiProjection
 import fr.jhelp.tools.engine3d.view.View3DBounds
@@ -11,25 +14,38 @@ import javax.microedition.khronos.opengles.GL10
 
 class Scene3D internal constructor(viewBoundsState: StateFlow<View3DBounds>)
 {
+    /** manage scene animations */
+    private val animationManager = AnimationManager()
+
     var backgroundColor: Color3D = WHITE
-    var root : Node3D = Node3D()
+    var root: Node3D = Node3D()
+
+    fun play(animation: Animation)
+    {
+        this.animationManager.play(animation)
+    }
+
+    fun stop(animation: Animation)
+    {
+        this.animationManager.stop(animation)
+    }
+
+    fun animationPlayer(animation: Animation): AnimationPlayer =
+        AnimationPlayer(animation, this.animationManager)
 
     @OpenGLThread
-    fun render(gl:GL10)
+    fun render(gl: GL10)
     {
         this.background(gl)
         this.nodes(gl)
     }
 
-    private fun background(gl:GL10)
+    private fun background(gl: GL10)
     {
-        gl.glClearColor(this.backgroundColor.red,
-                        this.backgroundColor.green,
-                        this.backgroundColor.blue,
-                        1f)
+        gl.glClearColor(this.backgroundColor.red, this.backgroundColor.green, this.backgroundColor.blue, 1f)
     }
 
-    private fun nodes(gl:GL10)
+    private fun nodes(gl: GL10)
     {
         val nodes = SortedArray<Node3D>(NodeOrderZ)
         val stack = Stack<Node3D>()
@@ -79,5 +95,7 @@ class Scene3D internal constructor(viewBoundsState: StateFlow<View3DBounds>)
             node.render(gl)
             gl.glPopMatrix()
         }
+
+        this.animationManager.update()
     }
 }
