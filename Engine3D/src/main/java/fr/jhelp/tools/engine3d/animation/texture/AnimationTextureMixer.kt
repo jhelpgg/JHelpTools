@@ -3,7 +3,6 @@ package fr.jhelp.tools.engine3d.animation.texture
 import fr.jhelp.tools.engine3d.animation.Animation
 import fr.jhelp.tools.engine3d.animation.interpolation.Interpolation
 import fr.jhelp.tools.engine3d.animation.interpolation.LinearInterpolation
-import fr.jhelp.tools.engine3d.scene.Texture
 import fr.jhelp.tools.engine3d.scene.TextureImage
 import fr.jhelp.tools.utilities.image.mixer.type.ImageMixingType
 import kotlin.math.max
@@ -25,7 +24,7 @@ class AnimationTextureMixer(firstTexture: TextureImage, secondTexture: TextureIm
 {
     private val numberFrame = max(1f, (durationMilliseconds * this.fps) / 1000f)
     private val textureMixer = TextureMixer(firstTexture, secondTexture, imageMixingType, animationTextureSize)
-    val texture: Texture get() = this.textureMixer.texture
+    val texture: TextureImage get() = this.textureMixer.texture
 
     override fun animate(frame: Float): Boolean
     {

@@ -1,8 +1,22 @@
 package fr.jhelp.tools.engine3d.dsl
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import androidx.annotation.DrawableRes
+import fr.jhelp.tools.engine3d.animation.texture.AnimationTextureMixer
 import fr.jhelp.tools.engine3d.annotations.MaterialDSL
+import fr.jhelp.tools.engine3d.resources.texture.TextureSource
+import fr.jhelp.tools.engine3d.resources.texture.TextureSourceAnimationMixer
+import fr.jhelp.tools.engine3d.resources.texture.TextureSourceAsset
+import fr.jhelp.tools.engine3d.resources.texture.TextureSourceCreated
+import fr.jhelp.tools.engine3d.resources.texture.TextureSourceDefault
+import fr.jhelp.tools.engine3d.resources.texture.TextureSourceDrawable
+import fr.jhelp.tools.engine3d.resources.texture.TextureSourceVideo
 import fr.jhelp.tools.engine3d.scene.Color3D
 import fr.jhelp.tools.engine3d.scene.Material
+import fr.jhelp.tools.engine3d.scene.TextureImage
+import fr.jhelp.tools.engine3d.scene.TextureVideo
 import fr.jhelp.tools.utilities.math.bounds
 
 /**
@@ -32,9 +46,77 @@ class MaterialCreator internal constructor(private val material: Material)
     /** Reference on texture to apply */
     @MaterialDSL
     var textureReference: TextureReference? = null
+        private set
+
+    fun noTexture()
+    {
+        this.textureReference = null
+    }
+
+    fun textureVideo(): TextureVideo
+    {
+        val video = TextureSourceVideo()
+        this.source(video)
+        return video.texture
+    }
+
+    fun textureAsset(assetPath: String): TextureImage
+    {
+        val asset = TextureSourceAsset(assetPath)
+        this.source(asset)
+        return asset.texture
+    }
+
+    fun textureDefault(): TextureImage
+    {
+        val default = TextureSourceDefault
+        this.source(default)
+        return default.texture
+    }
+
+    fun textureDrawable(@DrawableRes drawableID: Int, sealed: Boolean = true): TextureImage
+    {
+        val drawable = TextureSourceDrawable(drawableID, sealed)
+        this.source(drawable)
+        return drawable.texture
+    }
+
+    fun textureCreate(width: Int, height: Int,
+                      draw: (Bitmap, Canvas, Paint) -> Unit): TextureImage
+    {
+        val created = TextureSourceCreated(width, height, draw)
+        this.source(created)
+        return created.texture
+    }
+
+    fun textureAnimationMixer(startTexture: TextureReference, endTexture: TextureReference,
+                              animationTextureMixer: AnimationTextureMixerCreator.() -> Unit): AnimationTextureMixer
+    {
+        val animationTextureMixerCreator = AnimationTextureMixerCreator(startTexture, endTexture)
+        animationTextureMixerCreator.animationTextureMixer()
+        val animation = TextureSourceAnimationMixer(animationTextureMixerCreator())
+        this.source(animation)
+        return animation.animationTextureMixer
+    }
 
     internal fun resolveTexture()
     {
         this.material.texture = this.textureReference?.textureSource?.texture
+    }
+
+    private fun source(textureSource: TextureSource<*>)
+    {
+        val textureReference = this.textureReference
+
+        this.textureReference =
+            when (textureReference)
+            {
+                null -> TextureReference(textureSource)
+                else ->
+                {
+                    textureReference.textureSource = textureSource
+                    textureReference
+                }
+            }
     }
 }

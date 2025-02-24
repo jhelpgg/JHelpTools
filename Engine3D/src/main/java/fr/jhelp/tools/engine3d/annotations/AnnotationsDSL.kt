@@ -22,6 +22,9 @@ annotation class AnimationNodePositionKeyFrameDSL
 annotation class AnimationParallelDSL
 
 @DslMarker
+annotation class AnimationTextureMixerDSL
+
+@DslMarker
 annotation class BoxUvDSL
 
 @DslMarker

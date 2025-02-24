@@ -12,7 +12,7 @@ import kotlin.coroutines.CoroutineContext
  * @return Created animation
  */
 @AnimationDSL
-fun animationNodePositionKeyFrame(node: NodeReference, keyFrame: AnimationNodePositionKeyFrameCreator.() -> Unit) : Animation
+fun animationNodePositionKeyFrame(node: NodeReference, keyFrame: AnimationNodePositionKeyFrameCreator.() -> Unit): Animation
 {
     val creator = AnimationNodePositionKeyFrameCreator(node.node)
     creator.keyFrame()
@@ -26,7 +26,7 @@ fun animationNodePositionKeyFrame(node: NodeReference, keyFrame: AnimationNodePo
  * @return Created animation
  */
 @AnimationDSL
-fun animationNodeFollowEquation(node: NodeReference, followEquation: AnimationNodeFollowEquationCreator.() -> Unit) : Animation
+fun animationNodeFollowEquation(node: NodeReference, followEquation: AnimationNodeFollowEquationCreator.() -> Unit): Animation
 {
     val creator = AnimationNodeFollowEquationCreator(node)
     creator.followEquation()
@@ -39,7 +39,7 @@ fun animationNodeFollowEquation(node: NodeReference, followEquation: AnimationNo
  * @return Created animation
  */
 @AnimationDSL
-fun animationList(animationList: AnimationListCreator.() -> Unit) : Animation
+fun animationList(animationList: AnimationListCreator.() -> Unit): Animation
 {
     val creator = AnimationListCreator()
     creator.animationList()
@@ -52,7 +52,7 @@ fun animationList(animationList: AnimationListCreator.() -> Unit) : Animation
  * @return Created animation
  */
 @AnimationDSL
-fun animationParallel(animationParallel: AnimationParallelCreator.() -> Unit) : Animation
+fun animationParallel(animationParallel: AnimationParallelCreator.() -> Unit): Animation
 {
     val creator = AnimationParallelCreator()
     creator.animationParallel()
@@ -65,7 +65,7 @@ fun animationParallel(animationParallel: AnimationParallelCreator.() -> Unit) : 
  * @return Created animation
  */
 @AnimationDSL
-fun animationLoop(animationLoop: AnimationLoopCreator.() -> Unit) : Animation
+fun animationLoop(animationLoop: AnimationLoopCreator.() -> Unit): Animation
 {
     val creator = AnimationLoopCreator()
     creator.animationLoop()
@@ -79,7 +79,7 @@ fun animationLoop(animationLoop: AnimationLoopCreator.() -> Unit) : Animation
  * @return Created animation
  */
 @AnimationDSL
-fun animationTask(coroutineContext: CoroutineContext, task: () -> Unit) : Animation =
+fun animationTask(coroutineContext: CoroutineContext, task: () -> Unit): Animation =
     AnimationLaunchTask(coroutineContext, task)
 
 /**
@@ -88,5 +88,22 @@ fun animationTask(coroutineContext: CoroutineContext, task: () -> Unit) : Animat
  * @return Created animation
  */
 @AnimationDSL
-fun animationTask(task: () -> Unit) : Animation =
+fun animationTask(task: () -> Unit): Animation =
     AnimationLaunchTask(task)
+
+/**
+ * Create an animation texture mixer
+ * @param textureStart Start texture
+ * @param textureEnd End texture
+ * @param animationTextureMixer Animation texture mixer creator
+ * @return Created animation
+ */
+@AnimationDSL
+fun animationTextureMixer(textureStart: TextureReference, textureEnd: TextureReference,
+                          animationTextureMixer: AnimationTextureMixerCreator.() -> Unit): Animation
+{
+    val creator = AnimationTextureMixerCreator(textureStart, textureEnd)
+    creator.animationTextureMixer()
+    return creator()
+}
+
