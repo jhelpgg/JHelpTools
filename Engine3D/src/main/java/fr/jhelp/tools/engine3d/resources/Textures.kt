@@ -13,8 +13,8 @@ import java.io.InputStream
 import kotlin.math.max
 import kotlin.math.min
 
-fun defaultTexture(): TextureImage =
-    TextureImage(defaultBitmapBlackWhite(), true)
+fun defaultTexture(sealed:Boolean = true): TextureImage =
+    TextureImage(defaultBitmapBlackWhite(), sealed)
 
 fun texture(@TextureSize width: Int, @TextureSize height: Int): TextureImage
 {

@@ -30,6 +30,9 @@ val Int.green: Int get() = (this shr 8) and 0xFF
 /** Color int blue part */
 val Int.blue: Int get() = this and 0xFF
 
+/** Get color parts */
+val Int.colorParts : ColorParts get() = ColorParts(this)
+
 /**
  * Create color whit given Alpha, Red, Green and Blue parts
  */

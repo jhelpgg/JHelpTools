@@ -10,14 +10,14 @@ abstract class Animation(fps: Int = 25)
 {
     /** Animation frame per seconds */
     val fps: Int = fps.bounds(1, 100)
-    private var statTime = 0L
+    private var startTime = 0L
 
     /**
      * Start the animation
      */
     internal fun start()
     {
-        this.statTime = SystemClock.uptimeMillis()
+        this.startTime = SystemClock.uptimeMillis()
         this.initialize()
         this.animate(0f)
     }
@@ -28,7 +28,7 @@ abstract class Animation(fps: Int = 25)
      * @return `true`if animation continue. `false` if animation finished
      */
     internal fun animate(): Boolean =
-        this.animate(((SystemClock.uptimeMillis() - this.statTime) * this.fps) / 1000f)
+        this.animate(((SystemClock.uptimeMillis() - this.startTime) * this.fps) / 1000f)
 
     /**
      * Transform time to number of frame, depends on animation FPS

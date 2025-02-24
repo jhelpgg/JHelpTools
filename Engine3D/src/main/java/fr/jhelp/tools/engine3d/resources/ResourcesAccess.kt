@@ -47,7 +47,7 @@ object ResourcesAccess
         }
         else
         {
-            defaultTexture()
+            defaultTexture(sealed)
         }
 
     /**
@@ -63,12 +63,12 @@ object ResourcesAccess
             catch (exception: Exception)
             {
                 Log.w("ResourcesAccess", "Issue while loading asset : $assetPath", exception)
-                defaultTexture()
+                defaultTexture(sealed)
             }
         }
         else
         {
-            defaultTexture()
+            defaultTexture(sealed)
         }
 
     /**
