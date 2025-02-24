@@ -107,3 +107,16 @@ fun animationTextureMixer(textureStart: TextureReference, textureEnd: TextureRef
     return creator()
 }
 
+/**
+ * Create an animation on material
+ * @param materialReference Material to animate
+ * @param animationMaterial Material animation creator
+ * @return Created animation
+ */
+@AnimationDSL
+fun animationMaterial(materialReference: MaterialReference, animationMaterial: AnimationMaterialCreator.() -> Unit): Animation
+{
+    val creator = AnimationMaterialCreator(materialReference)
+    creator.animationMaterial()
+    return creator.animationMaterial
+}

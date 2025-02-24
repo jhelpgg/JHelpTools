@@ -16,10 +16,9 @@ class AnimationCreator
     internal var animation : Animation = AnimationPause(1)
 
     /**
-     * Create an animation node position key frame
+     * Set animation be an animation node position key frame
      * @param node Node to animate
      * @param keyFrame Key frame creator
-     * @return Created animation
      */
     @AnimationNodePositionKeyFrameDSL
     fun nodePositionKeyFrame(node: NodeReference, keyFrame: AnimationNodePositionKeyFrameCreator.() -> Unit)
@@ -28,10 +27,9 @@ class AnimationCreator
     }
 
     /**
-     * Create an animation node follow equation
+     * Set animation be an animation node follow equation
      * @param node Node to animate
      * @param followEquation Describes equations for node position
-     * @return Created animation
      */
     @AnimationNodeFollowEquationDSL
     fun nodeFollowEquation(node: NodeReference, followEquation: AnimationNodeFollowEquationCreator.() -> Unit)
@@ -40,9 +38,8 @@ class AnimationCreator
     }
 
     /**
-     * Create an animation list played in sequence
+     * Set animation be an animation list played in sequence
      * @param animationList List of animation to play
-     * @return Created animation
      */
     @AnimationListDSL
     fun list(animationList: AnimationListCreator.() -> Unit)
@@ -51,9 +48,8 @@ class AnimationCreator
     }
 
     /**
-     * Create an animation list played in parallel
+     * Set animation be an animation list played in parallel
      * @param animationParallel List of animation to play
-     * @return Created animation
      */
     @AnimationParallelDSL
     fun parallel(animationParallel: AnimationParallelCreator.() -> Unit)
@@ -61,9 +57,8 @@ class AnimationCreator
         this.animation = animationParallel(animationParallel)
     }
     /**
-     * Create an animation loop
+     * Set animation be an animation loop
      * @param animationLoop Animation loop creator
-     * @return Created animation
      */
     @AnimationLoopDSL
     fun loop(animationLoop: AnimationLoopCreator.() -> Unit)
@@ -72,10 +67,9 @@ class AnimationCreator
     }
 
     /**
-     * Create an animation that launch a task
+     * Set animation be an animation that launch a task
      * @param coroutineContext Context to launch the task
      * @param task Task to launch
-     * @return Created animation
      */
     @AnimationCreator
     fun task(coroutineContext: CoroutineContext, task: () -> Unit)
@@ -83,13 +77,35 @@ class AnimationCreator
         this.animation = animationTask(coroutineContext, task)
     }
     /**
-     * Create an animation that launch a task in default context
+     * Set animation be an animation that launch a task in default context
      * @param task Task to launch
-     * @return Created animation
      */
     @AnimationCreator
     fun task(task: () -> Unit)
     {
         this.animation = animationTask(task)
+    }
+
+    /**
+     * Set animation be an animation texture mixer
+     * @param textureStart Start texture
+     * @param textureEnd End texture
+     * @param animationTextureMixer Animation texture mixer creator
+     */
+    @AnimationCreator
+    fun textureMixer(textureStart: TextureReference, textureEnd: TextureReference, animationTextureMixer: AnimationTextureMixerCreator.() -> Unit)
+    {
+        this.animation = animationTextureMixer(textureStart, textureEnd, animationTextureMixer)
+    }
+
+    /**
+     * Set animation be an animation on material
+     * @param materialReference Material to animate
+     * @param animationMaterial Material animation creator
+     */
+    @AnimationCreator
+    fun material(materialReference: MaterialReference, animationMaterial: AnimationMaterialCreator.() -> Unit)
+    {
+        this.animation = animationMaterial(materialReference, animationMaterial)
     }
 }
