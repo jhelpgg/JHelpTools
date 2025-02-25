@@ -2,7 +2,7 @@ package fr.jhelp.tools.engine3d.dsl
 
 import fr.jhelp.tools.engine3d.animation.interpolation.Interpolation
 import fr.jhelp.tools.engine3d.animation.interpolation.LinearInterpolation
-import fr.jhelp.tools.engine3d.annotations.AnimationMaterialDSL
+import fr.jhelp.tools.engine3d.annotations.AnimationMaterialDiffuseDSL
 import fr.jhelp.tools.engine3d.scene.Color3D
 import kotlin.math.max
 
@@ -10,13 +10,13 @@ import kotlin.math.max
  * Create an animation on material diffuse
  * @property color3D Color to set
  */
-@AnimationMaterialDSL
-class AnimationMaterialDiffuseCreator(var color3D: Color3D)
+@AnimationMaterialDiffuseDSL
+class AnimationMaterialDiffuseCreator(@AnimationMaterialDiffuseDSL var color3D: Color3D)
 {
     /**
      * Time in milliseconds to set the color
      */
-    @AnimationMaterialDSL
+    @AnimationMaterialDiffuseDSL
     var timeMilliseconds: Int = 1
         set(value)
         {
@@ -26,6 +26,6 @@ class AnimationMaterialDiffuseCreator(var color3D: Color3D)
     /**
      * Interpolation type to use to go to this step ([LinearInterpolation] by default)
      */
-    @AnimationMaterialDSL
+    @AnimationMaterialDiffuseDSL
     var interpolation: Interpolation = LinearInterpolation
 }

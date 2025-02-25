@@ -5,6 +5,7 @@ import fr.jhelp.tools.engine3d.animation.change.ValueFollowFunctionOfT
 import fr.jhelp.tools.engine3d.animation.change.ValueNotChange
 import fr.jhelp.tools.engine3d.animation.node.AnimationNodeFollowEquation
 import fr.jhelp.tools.engine3d.annotations.AnimationNodeFollowEquationDSL
+import fr.jhelp.tools.engine3d.annotations.ValueFollowFunctionOfTDSL
 import kotlin.math.max
 
 /**
@@ -38,7 +39,7 @@ class AnimationNodeFollowEquationCreator(private val node: NodeReference)
      * Set equation of T for X coordinate
      */
     @AnimationNodeFollowEquationDSL
-    fun valueX(value: ValueFollowFunctionOfTCreator.() -> Unit)
+    fun valueX(value: @ValueFollowFunctionOfTDSL ValueFollowFunctionOfTCreator.() -> Unit)
     {
         val creator = ValueFollowFunctionOfTCreator()
         creator.value()
@@ -49,7 +50,7 @@ class AnimationNodeFollowEquationCreator(private val node: NodeReference)
      * Set equation of T for Y coordinate
      */
     @AnimationNodeFollowEquationDSL
-    fun valueY(value: ValueFollowFunctionOfTCreator.() -> Unit)
+    fun valueY(value: @ValueFollowFunctionOfTDSL ValueFollowFunctionOfTCreator.() -> Unit)
     {
         val creator = ValueFollowFunctionOfTCreator()
         creator.value()
@@ -60,7 +61,7 @@ class AnimationNodeFollowEquationCreator(private val node: NodeReference)
      * Set equation of T for Z coordinate
      */
     @AnimationNodeFollowEquationDSL
-    fun valueZ(value: ValueFollowFunctionOfTCreator.() -> Unit)
+    fun valueZ(value: @ValueFollowFunctionOfTDSL ValueFollowFunctionOfTCreator.() -> Unit)
     {
         val creator = ValueFollowFunctionOfTCreator()
         creator.value()
@@ -71,7 +72,7 @@ class AnimationNodeFollowEquationCreator(private val node: NodeReference)
      * Set equation of T for angle around X axis
      */
     @AnimationNodeFollowEquationDSL
-    fun valueAngleX(value: ValueFollowFunctionOfTCreator.() -> Unit)
+    fun valueAngleX(value: @ValueFollowFunctionOfTDSL ValueFollowFunctionOfTCreator.() -> Unit)
     {
         val creator = ValueFollowFunctionOfTCreator()
         creator.value()
@@ -82,7 +83,7 @@ class AnimationNodeFollowEquationCreator(private val node: NodeReference)
      * Set equation of T for angle around Y axis
      */
     @AnimationNodeFollowEquationDSL
-    fun valueAngleY(value: ValueFollowFunctionOfTCreator.() -> Unit)
+    fun valueAngleY(value: @ValueFollowFunctionOfTDSL ValueFollowFunctionOfTCreator.() -> Unit)
     {
         val creator = ValueFollowFunctionOfTCreator()
         creator.value()
@@ -93,7 +94,7 @@ class AnimationNodeFollowEquationCreator(private val node: NodeReference)
      * Set equation of T for angle around Z axis
      */
     @AnimationNodeFollowEquationDSL
-    fun valueAngleZ(value: ValueFollowFunctionOfTCreator.() -> Unit)
+    fun valueAngleZ(value: @ValueFollowFunctionOfTDSL ValueFollowFunctionOfTCreator.() -> Unit)
     {
         val creator = ValueFollowFunctionOfTCreator()
         creator.value()
@@ -104,7 +105,7 @@ class AnimationNodeFollowEquationCreator(private val node: NodeReference)
      * Set equation of T for scale along X axis
      */
     @AnimationNodeFollowEquationDSL
-    fun valueScaleX(value: ValueFollowFunctionOfTCreator.() -> Unit)
+    fun valueScaleX(value: @ValueFollowFunctionOfTDSL ValueFollowFunctionOfTCreator.() -> Unit)
     {
         val creator = ValueFollowFunctionOfTCreator()
         creator.value()
@@ -115,7 +116,7 @@ class AnimationNodeFollowEquationCreator(private val node: NodeReference)
      * Set equation of T for scale along Y axis
      */
     @AnimationNodeFollowEquationDSL
-    fun valueScaleY(value: ValueFollowFunctionOfTCreator.() -> Unit)
+    fun valueScaleY(value: @ValueFollowFunctionOfTDSL ValueFollowFunctionOfTCreator.() -> Unit)
     {
         val creator = ValueFollowFunctionOfTCreator()
         creator.value()
@@ -126,7 +127,7 @@ class AnimationNodeFollowEquationCreator(private val node: NodeReference)
      * Set equation of T for scale along Z axis
      */
     @AnimationNodeFollowEquationDSL
-    fun valueScaleZ(value: ValueFollowFunctionOfTCreator.() -> Unit)
+    fun valueScaleZ(value: @ValueFollowFunctionOfTDSL ValueFollowFunctionOfTCreator.() -> Unit)
     {
         val creator = ValueFollowFunctionOfTCreator()
         creator.value()

@@ -1,7 +1,9 @@
 package fr.jhelp.tools.engine3d.dsl
 
 import fr.jhelp.tools.engine3d.animation.material.AnimationMaterial
+import fr.jhelp.tools.engine3d.annotations.AnimationMaterialAlphaDSL
 import fr.jhelp.tools.engine3d.annotations.AnimationMaterialDSL
+import fr.jhelp.tools.engine3d.annotations.AnimationMaterialDiffuseDSL
 
 /**
  * Create an animation on material
@@ -19,7 +21,7 @@ class AnimationMaterialCreator(private val materialReference: MaterialReference)
      * Set diffuse color at given time
      */
     @AnimationMaterialDSL
-    fun diffuse(diffuse: AnimationMaterialDiffuseCreator.() -> Unit)
+    fun diffuse(diffuse: @AnimationMaterialDiffuseDSL AnimationMaterialDiffuseCreator.() -> Unit)
     {
         val creator = AnimationMaterialDiffuseCreator(this.materialReference.material.diffuse)
         creator.diffuse()
@@ -30,7 +32,7 @@ class AnimationMaterialCreator(private val materialReference: MaterialReference)
      * Set alpha at given time
      */
     @AnimationMaterialDSL
-    fun alpha(alpha: AnimationMaterialAlphaCreator.() -> Unit)
+    fun alpha(alpha: @AnimationMaterialAlphaDSL AnimationMaterialAlphaCreator.() -> Unit)
     {
         val creator = AnimationMaterialAlphaCreator(this.materialReference.material.alpha)
         creator.alpha()

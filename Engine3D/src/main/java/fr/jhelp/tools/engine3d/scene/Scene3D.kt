@@ -38,6 +38,7 @@ class Scene3D internal constructor(viewBoundsState: StateFlow<View3DBounds>)
     {
         this.background(gl)
         this.nodes(gl)
+        this.animationManager.update()
     }
 
     private fun background(gl: GL10)
@@ -95,7 +96,5 @@ class Scene3D internal constructor(viewBoundsState: StateFlow<View3DBounds>)
             node.render(gl)
             gl.glPopMatrix()
         }
-
-        this.animationManager.update()
     }
 }

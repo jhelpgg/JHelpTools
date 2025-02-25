@@ -3,6 +3,7 @@ package fr.jhelp.tools.engine3d.dsl
 import fr.jhelp.tools.engine3d.animation.interpolation.Interpolation
 import fr.jhelp.tools.engine3d.animation.interpolation.LinearInterpolation
 import fr.jhelp.tools.engine3d.annotations.KeyFrameDSL
+import fr.jhelp.tools.engine3d.annotations.PositionDSL
 import fr.jhelp.tools.engine3d.scene.Node3D
 import fr.jhelp.tools.engine3d.scene.Position3D
 import kotlin.math.max
@@ -32,7 +33,7 @@ class KeyFrameCreator
      * Set position
      */
     @KeyFrameDSL
-    fun position(position: Position3D.() -> Unit)
+    fun position(position: @PositionDSL Position3D.() -> Unit)
     {
         this.position.position()
     }

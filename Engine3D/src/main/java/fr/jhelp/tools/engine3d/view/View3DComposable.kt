@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
+import fr.jhelp.tools.engine3d.annotations.SceneDSL
 import fr.jhelp.tools.engine3d.dsl.SceneCreator
 
 /**
@@ -17,7 +18,7 @@ import fr.jhelp.tools.engine3d.dsl.SceneCreator
  */
 @Composable
 fun View3DComposable(modifier: Modifier = Modifier,
-                     scene: SceneCreator.() -> Unit = {
+                     scene: @SceneDSL SceneCreator.() -> Unit = {
                          this.scenePosition { this.z = -2f }
                          this.root { this.box {} }
                      })

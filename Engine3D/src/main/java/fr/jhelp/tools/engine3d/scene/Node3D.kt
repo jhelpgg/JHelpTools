@@ -172,7 +172,6 @@ open class Node3D : Iterable<Node3D>
      */
     fun children(index: Int): Node3D = this.children[index]
 
-
     /**
      * Apply material to the node
      */

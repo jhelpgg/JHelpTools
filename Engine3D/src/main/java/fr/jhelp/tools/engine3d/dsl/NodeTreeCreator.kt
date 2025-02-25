@@ -1,6 +1,9 @@
 package fr.jhelp.tools.engine3d.dsl
 
+import fr.jhelp.tools.engine3d.annotations.BoxUvDSL
+import fr.jhelp.tools.engine3d.annotations.NodeDSL
 import fr.jhelp.tools.engine3d.annotations.NodeTreeDSL
+import fr.jhelp.tools.engine3d.annotations.PathDSL
 import fr.jhelp.tools.engine3d.scene.Clone3D
 import fr.jhelp.tools.engine3d.scene.Node3D
 import fr.jhelp.tools.engine3d.scene.Object3D
@@ -23,7 +26,7 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
      * Add node to the node tree
      */
     @NodeTreeDSL
-    fun node(reference: NodeReference = junkReference, node: Node3D.() -> Unit)
+    fun node(reference: NodeReference = junkReference, node: @NodeDSL Node3D.() -> Unit)
     {
         val node3D = Node3D()
         reference.node = node3D
@@ -36,7 +39,7 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
      */
     @NodeTreeDSL
     fun object3D(reference: NodeReference = junkReference,
-                 object3D: Object3D.() -> Unit)
+                 object3D: @NodeDSL Object3D.() -> Unit)
     {
         val object3DReal = Object3D()
         reference.node = object3DReal
@@ -50,7 +53,7 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
     @NodeTreeDSL
     fun clone(reference: NodeReference = junkReference,
               referenceObjectOrClone: NodeReference,
-              clone3D: Clone3D.() -> Unit)
+              clone3D: @NodeDSL Clone3D.() -> Unit)
     {
         val node = referenceObjectOrClone.node
         val clone =
@@ -74,7 +77,7 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
               startU: Float = 0f, endU: Float = 1f,
               startV: Float = 0f, endV: Float = 1f,
               seal: Boolean = true,
-              plane: Plane.() -> Unit)
+              plane: @NodeDSL Plane.() -> Unit)
     {
         val planeReal = Plane(startU, endU, startV, endV, seal)
         reference.node = planeReal
@@ -87,9 +90,9 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
      */
     @NodeTreeDSL
     fun box(reference: NodeReference = junkReference,
-            boxUV: BoxUVCreator.() -> Unit = {},
+            boxUV: @BoxUvDSL BoxUVCreator.() -> Unit = {},
             seal: Boolean = true,
-            box: Box.() -> Unit)
+            box: @NodeDSL Box.() -> Unit)
     {
         val boxUVCreator = BoxUVCreator()
         boxUV(boxUVCreator)
@@ -98,6 +101,7 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
         box(boxReal)
         this.root.add(boxReal)
     }
+
     /**
      * Add a revolution
      */
@@ -106,9 +110,9 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
                    angle: Float = 360f,
                    multiplierU: Float = 1f, startV: Float = 0f, endV: Float = 1f,
                    pathPrecision: Int = 5, rotationPrecision: Int = 12,
-                   path: Path.() -> Unit,
+                   path: @PathDSL Path.() -> Unit,
                    seal: Boolean = true,
-                   revolution: Revolution.() -> Unit)
+                   revolution: @NodeDSL Revolution.() -> Unit)
     {
         val pathReal = Path()
         path(pathReal)
@@ -129,7 +133,7 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
     fun sphere(reference: NodeReference = junkReference,
                multiplierU: Float = 1f, multiplierV: Float = 1f, slice: Int = 16, slack: Int = 16,
                seal: Boolean = true,
-               sphere: Sphere.() -> Unit)
+               sphere: @NodeDSL Sphere.() -> Unit)
     {
         val sphereReal = Sphere(multiplierU, multiplierV, slice, slack, seal)
         reference.node = sphereReal
@@ -140,12 +144,12 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
     /** Create object that represents a path along an other one */
     @NodeTreeDSL
     fun objectPath(reference: NodeReference = junkReference,
-                   mainPath: Path.() -> Unit, mainPathPrecision: Int = 5,
-                   followPath: Path.() -> Unit, followPathPrecision: Int = 5,
+                   mainPath: @PathDSL Path.() -> Unit, mainPathPrecision: Int = 5,
+                   followPath: @PathDSL Path.() -> Unit, followPathPrecision: Int = 5,
                    startU: Float = 0f, endU: Float = 1f,
                    startV: Float = 0f, endV: Float = 1f,
                    seal: Boolean = true,
-                   objectPath: ObjectPath.() -> Unit)
+                   objectPath: @NodeDSL ObjectPath.() -> Unit)
     {
         val mainPathReal = Path()
         mainPath(mainPathReal)
@@ -188,7 +192,7 @@ class NodeTreeCreator internal constructor(private val root: Node3D)
               uStart: Float = 0f, uEnd: Float = 1f,
               vStart: Float = 0f, vEnd: Float = 1f,
               seal: Boolean = true,
-              field: Field3D.() -> Unit)
+              field: @NodeDSL Field3D.() -> Unit)
     {
         val fieldReal = Field3D(zFunction,
                                 xStart, xEnd, xNumberSteps,

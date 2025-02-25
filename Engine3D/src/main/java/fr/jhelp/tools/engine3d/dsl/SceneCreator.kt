@@ -1,6 +1,10 @@
 package fr.jhelp.tools.engine3d.dsl
 
 import fr.jhelp.tools.engine3d.animation.AnimationPlayer
+import fr.jhelp.tools.engine3d.annotations.AnimationCreatorDSL
+import fr.jhelp.tools.engine3d.annotations.AnimationDSL
+import fr.jhelp.tools.engine3d.annotations.NodeTreeDSL
+import fr.jhelp.tools.engine3d.annotations.PositionDSL
 import fr.jhelp.tools.engine3d.annotations.SceneDSL
 import fr.jhelp.tools.engine3d.scene.Color3D
 import fr.jhelp.tools.engine3d.scene.Position3D
@@ -32,7 +36,7 @@ class SceneCreator internal constructor(val view3D: View3D)
      * Change/define scene position
      */
     @SceneDSL
-    fun scenePosition(position: Position3D.() -> Unit)
+    fun scenePosition(position: @PositionDSL Position3D.() -> Unit)
     {
         this.scene3D.root.position(position)
     }
@@ -41,7 +45,7 @@ class SceneCreator internal constructor(val view3D: View3D)
      * Create scene node hierarchy
      */
     @SceneDSL
-    fun root(nodeTree: NodeTreeCreator.() -> Unit)
+    fun root(nodeTree: @NodeTreeDSL NodeTreeCreator.() -> Unit)
     {
         this.scene3D.root.children(nodeTree)
     }
@@ -55,7 +59,7 @@ class SceneCreator internal constructor(val view3D: View3D)
      * @return Animation player
      */
     @SceneDSL
-    fun animationPlayer(animationCreator: AnimationCreator.() -> Unit): AnimationPlayer
+    fun animationPlayer(animationCreator: @AnimationCreatorDSL AnimationCreator.() -> Unit): AnimationPlayer
     {
         val creator = AnimationCreator()
         creator.animationCreator()

@@ -5,6 +5,8 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import androidx.annotation.DrawableRes
 import fr.jhelp.tools.engine3d.animation.texture.AnimationTextureMixer
+import fr.jhelp.tools.engine3d.annotations.AnimationTextureMixerDSL
+import fr.jhelp.tools.engine3d.annotations.DrawDSL
 import fr.jhelp.tools.engine3d.annotations.MaterialDSL
 import fr.jhelp.tools.engine3d.resources.texture.TextureSource
 import fr.jhelp.tools.engine3d.resources.texture.TextureSourceAnimationMixer
@@ -48,11 +50,13 @@ class MaterialCreator internal constructor(private val material: Material)
     var textureReference: TextureReference? = null
         private set
 
+    @MaterialDSL
     fun noTexture()
     {
         this.textureReference = null
     }
 
+    @MaterialDSL
     fun textureVideo(): TextureVideo
     {
         val video = TextureSourceVideo()
@@ -60,6 +64,7 @@ class MaterialCreator internal constructor(private val material: Material)
         return video.texture
     }
 
+    @MaterialDSL
     fun textureAsset(assetPath: String): TextureImage
     {
         val asset = TextureSourceAsset(assetPath)
@@ -67,6 +72,7 @@ class MaterialCreator internal constructor(private val material: Material)
         return asset.texture
     }
 
+    @MaterialDSL
     fun textureDefault(): TextureImage
     {
         val default = TextureSourceDefault
@@ -74,6 +80,7 @@ class MaterialCreator internal constructor(private val material: Material)
         return default.texture
     }
 
+    @MaterialDSL
     fun textureDrawable(@DrawableRes drawableID: Int, sealed: Boolean = true): TextureImage
     {
         val drawable = TextureSourceDrawable(drawableID, sealed)
@@ -81,16 +88,18 @@ class MaterialCreator internal constructor(private val material: Material)
         return drawable.texture
     }
 
+    @MaterialDSL
     fun textureCreate(width: Int, height: Int,
-                      draw: (Bitmap, Canvas, Paint) -> Unit): TextureImage
+                      draw: @DrawDSL (Bitmap, Canvas, Paint) -> Unit): TextureImage
     {
         val created = TextureSourceCreated(width, height, draw)
         this.source(created)
         return created.texture
     }
 
+    @MaterialDSL
     fun textureAnimationMixer(startTexture: TextureReference, endTexture: TextureReference,
-                              animationTextureMixer: AnimationTextureMixerCreator.() -> Unit): AnimationTextureMixer
+                              animationTextureMixer: @AnimationTextureMixerDSL AnimationTextureMixerCreator.() -> Unit): AnimationTextureMixer
     {
         val animationTextureMixerCreator = AnimationTextureMixerCreator(startTexture, endTexture)
         animationTextureMixerCreator.animationTextureMixer()

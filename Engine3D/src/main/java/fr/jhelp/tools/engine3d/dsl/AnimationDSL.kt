@@ -3,6 +3,13 @@ package fr.jhelp.tools.engine3d.dsl
 import fr.jhelp.tools.engine3d.animation.Animation
 import fr.jhelp.tools.engine3d.animation.AnimationLaunchTask
 import fr.jhelp.tools.engine3d.annotations.AnimationDSL
+import fr.jhelp.tools.engine3d.annotations.AnimationListDSL
+import fr.jhelp.tools.engine3d.annotations.AnimationLoopDSL
+import fr.jhelp.tools.engine3d.annotations.AnimationMaterialDSL
+import fr.jhelp.tools.engine3d.annotations.AnimationNodeFollowEquationDSL
+import fr.jhelp.tools.engine3d.annotations.AnimationNodePositionKeyFrameDSL
+import fr.jhelp.tools.engine3d.annotations.AnimationParallelDSL
+import fr.jhelp.tools.engine3d.annotations.AnimationTextureMixerDSL
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -12,7 +19,8 @@ import kotlin.coroutines.CoroutineContext
  * @return Created animation
  */
 @AnimationDSL
-fun animationNodePositionKeyFrame(node: NodeReference, keyFrame: AnimationNodePositionKeyFrameCreator.() -> Unit): Animation
+fun animationNodePositionKeyFrame(node: NodeReference,
+                                  keyFrame: @AnimationNodePositionKeyFrameDSL AnimationNodePositionKeyFrameCreator.() -> Unit): Animation
 {
     val creator = AnimationNodePositionKeyFrameCreator(node.node)
     creator.keyFrame()
@@ -26,7 +34,8 @@ fun animationNodePositionKeyFrame(node: NodeReference, keyFrame: AnimationNodePo
  * @return Created animation
  */
 @AnimationDSL
-fun animationNodeFollowEquation(node: NodeReference, followEquation: AnimationNodeFollowEquationCreator.() -> Unit): Animation
+fun animationNodeFollowEquation(node: NodeReference,
+                                followEquation: @AnimationNodeFollowEquationDSL AnimationNodeFollowEquationCreator.() -> Unit): Animation
 {
     val creator = AnimationNodeFollowEquationCreator(node)
     creator.followEquation()
@@ -39,7 +48,7 @@ fun animationNodeFollowEquation(node: NodeReference, followEquation: AnimationNo
  * @return Created animation
  */
 @AnimationDSL
-fun animationList(animationList: AnimationListCreator.() -> Unit): Animation
+fun animationList(animationList: @AnimationListDSL AnimationListCreator.() -> Unit): Animation
 {
     val creator = AnimationListCreator()
     creator.animationList()
@@ -52,7 +61,7 @@ fun animationList(animationList: AnimationListCreator.() -> Unit): Animation
  * @return Created animation
  */
 @AnimationDSL
-fun animationParallel(animationParallel: AnimationParallelCreator.() -> Unit): Animation
+fun animationParallel(animationParallel: @AnimationParallelDSL AnimationParallelCreator.() -> Unit): Animation
 {
     val creator = AnimationParallelCreator()
     creator.animationParallel()
@@ -65,7 +74,7 @@ fun animationParallel(animationParallel: AnimationParallelCreator.() -> Unit): A
  * @return Created animation
  */
 @AnimationDSL
-fun animationLoop(animationLoop: AnimationLoopCreator.() -> Unit): Animation
+fun animationLoop(animationLoop: @AnimationLoopDSL AnimationLoopCreator.() -> Unit): Animation
 {
     val creator = AnimationLoopCreator()
     creator.animationLoop()
@@ -100,7 +109,7 @@ fun animationTask(task: () -> Unit): Animation =
  */
 @AnimationDSL
 fun animationTextureMixer(textureStart: TextureReference, textureEnd: TextureReference,
-                          animationTextureMixer: AnimationTextureMixerCreator.() -> Unit): Animation
+                          animationTextureMixer: @AnimationTextureMixerDSL AnimationTextureMixerCreator.() -> Unit): Animation
 {
     val creator = AnimationTextureMixerCreator(textureStart, textureEnd)
     creator.animationTextureMixer()
@@ -114,7 +123,8 @@ fun animationTextureMixer(textureStart: TextureReference, textureEnd: TextureRef
  * @return Created animation
  */
 @AnimationDSL
-fun animationMaterial(materialReference: MaterialReference, animationMaterial: AnimationMaterialCreator.() -> Unit): Animation
+fun animationMaterial(materialReference: MaterialReference,
+                      animationMaterial: @AnimationMaterialDSL AnimationMaterialCreator.() -> Unit): Animation
 {
     val creator = AnimationMaterialCreator(materialReference)
     creator.animationMaterial()

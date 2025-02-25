@@ -1,12 +1,16 @@
 package fr.jhelp.tools.engine3d.dsl
 
+import fr.jhelp.tools.engine3d.annotations.NodeDSL
+import fr.jhelp.tools.engine3d.annotations.NodeTreeDSL
+import fr.jhelp.tools.engine3d.annotations.PositionDSL
 import fr.jhelp.tools.engine3d.scene.Node3D
 import fr.jhelp.tools.engine3d.scene.Position3D
 
 /**
  * Change node position
  */
-fun Node3D.position(position: Position3D.() -> Unit)
+@NodeDSL
+fun Node3D.position(position: @PositionDSL Position3D.() -> Unit)
 {
     position(this.position)
 }
@@ -14,7 +18,8 @@ fun Node3D.position(position: Position3D.() -> Unit)
 /***
  * Create nde hierarchy
  */
-fun Node3D.children(nodeTree: NodeTreeCreator.() -> Unit)
+@NodeDSL
+fun Node3D.children(nodeTree: @NodeTreeDSL NodeTreeCreator.() -> Unit)
 {
     nodeTree(NodeTreeCreator(this))
 }

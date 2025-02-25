@@ -1,6 +1,6 @@
 package fr.jhelp.tools.engine3d.dsl
 
-import fr.jhelp.tools.engine3d.annotations.ValueFollowFunctionOfT
+import fr.jhelp.tools.engine3d.annotations.ValueFollowFunctionOfTDSL
 import fr.jhelp.tools.mathformal.FunctionFormal
 import fr.jhelp.tools.mathformal.dsl.T
 import fr.jhelp.tools.mathformal.simplifier.simplified
@@ -9,13 +9,13 @@ import fr.jhelp.tools.mathformal.variables
 /**
  * Create a value follow a function of T
  */
-@ValueFollowFunctionOfT
+@ValueFollowFunctionOfTDSL
 class ValueFollowFunctionOfTCreator
 {
     /**
      * Function of T
      */
-    @ValueFollowFunctionOfT
+    @ValueFollowFunctionOfTDSL
     var functionOfT: FunctionFormal<*> = T
         set(value)
         {
@@ -25,13 +25,13 @@ class ValueFollowFunctionOfTCreator
     /**
      * Start value
      */
-    @ValueFollowFunctionOfT
+    @ValueFollowFunctionOfTDSL
     var tStart: Float = 0f
 
     /**
      * End value
      */
-    @ValueFollowFunctionOfT
+    @ValueFollowFunctionOfTDSL
     var tEnd: Float = 1f
 
     private fun checkDependsOnT(function: FunctionFormal<*>): FunctionFormal<*>
