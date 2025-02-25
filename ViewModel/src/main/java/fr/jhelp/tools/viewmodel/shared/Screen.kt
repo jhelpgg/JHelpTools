@@ -9,5 +9,7 @@ enum class Screen
     VIDEO,
     ENGINE3D,
     COLORING,
+    HELLO_WORLD_3D,
+    MATERIAL_TEXTURE,
     EXIT
 }

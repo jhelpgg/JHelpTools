@@ -20,38 +20,29 @@ class TextureImage internal constructor(bitmap: Bitmap, sealed: Boolean) : Textu
     private var dirty = true
     private var canvas: Canvas? = null
     private var paint: Paint? = null
+    private var willSeal = sealed
     override val width: Int
     override val height: Int
 
     init
     {
-        this.sealed.set(sealed)
         this.width = bitmap.width
         this.height = bitmap.height
         this.pixels = byteBuffer((this.width * this.height) shl 2)
 
-        if (sealed)
+        if (bitmap.isMutable)
         {
-            bitmap.copyPixelsToBuffer(this.pixels!!)
-            this.pixels!!.position(0)
-            bitmap.recycle()
+            this.bitmap = bitmap
         }
         else
         {
-            if (bitmap.isMutable)
-            {
-                this.bitmap = bitmap
-            }
-            else
-            {
-                val width = bitmap.width
-                val height = bitmap.height
-                this.bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-                val pixels = IntArray(width * height)
-                bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
-                this.bitmap!!.setPixels(pixels, 0, width, 0, 0, width, height)
-                bitmap.recycle()
-            }
+            val width = bitmap.width
+            val height = bitmap.height
+            this.bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val pixels = IntArray(width * height)
+            bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+            this.bitmap!!.setPixels(pixels, 0, width, 0, 0, width, height)
+            bitmap.recycle()
         }
 
         System.gc()
@@ -161,6 +152,12 @@ class TextureImage internal constructor(bitmap: Bitmap, sealed: Boolean) : Textu
 
     override fun afterPixelsPushedInVideoMemory()
     {
+        if (this.willSeal)
+        {
+            this.willSeal = false
+            this.seal()
+        }
+
         if (this.sealed.get())
         {
             this.pixels?.clear()

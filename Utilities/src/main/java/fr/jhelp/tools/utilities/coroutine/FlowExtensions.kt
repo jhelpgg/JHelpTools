@@ -28,6 +28,7 @@ fun <T> Flow<T>.whenValueMatchDo(matchCondition: (T) -> Boolean, action: (T) -> 
             finally
             {
                 job?.cancel("Done")
+                job = null
             }
         }
     }

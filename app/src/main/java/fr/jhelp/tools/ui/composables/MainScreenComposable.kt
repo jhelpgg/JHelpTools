@@ -5,7 +5,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import fr.jhelp.tools.ui.composables.coloring.ColoringWithPaletteComposable
+import fr.jhelp.tools.ui.composables.engine3d.Engin3DMaterialComposable
 import fr.jhelp.tools.ui.composables.engine3d.Engine3DComposable
+import fr.jhelp.tools.ui.composables.engine3d.Engine3DHelloWorldComposable
 import fr.jhelp.tools.ui.composables.features.FeatureListComposable
 import fr.jhelp.tools.ui.composables.video.VideoComposable
 import fr.jhelp.tools.utilities.injector.injected
@@ -27,11 +29,13 @@ class MainScreenComposable
 
         when (navigationStatus.currentScreen)
         {
-            Screen.FEATURES_LIST -> this.featureListComposable.Show(modifier)
-            Screen.VIDEO         -> this.videoComposable.Show(modifier)
-            Screen.ENGINE3D      -> this.engine3DComposable.Show(modifier)
-            Screen.COLORING      -> this.coloringWithPaletteComposable.Show(modifier)
-            Screen.EXIT          -> Unit
+            Screen.FEATURES_LIST    -> this.featureListComposable.Show(modifier)
+            Screen.VIDEO            -> this.videoComposable.Show(modifier)
+            Screen.ENGINE3D         -> this.engine3DComposable.Show(modifier)
+            Screen.COLORING         -> this.coloringWithPaletteComposable.Show(modifier)
+            Screen.HELLO_WORLD_3D   -> Engine3DHelloWorldComposable(modifier)
+            Screen.MATERIAL_TEXTURE -> Engin3DMaterialComposable(modifier)
+            Screen.EXIT             -> Unit
         }
     }
 }

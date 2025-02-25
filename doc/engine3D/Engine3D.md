@@ -107,14 +107,11 @@ import java.lang.reflect.Modifier
 
 // ...
 {
-   // ...
-   private val view3DComposable = View3DComposable()
-
    @Composable
    fun Draw(modifier: Modifier=Modifier)
    {
        // ...
-       this.view3DComposable.Draw(modifier=modifier) {
+       View3DComposable(modifier=modifier) {
           // Create the scene
        }
        // ...
@@ -204,7 +201,7 @@ import fr.jhelp.tools.engine3d.scene.*
     val backWheel = wheel()
     val frontWheel = Clone3D(backWheel) 
     val handlebar = handlebar()
-    scene3d.root.add(bikr)
+    scene3d.root.add(bike)
     bike.add(body)
     body.add(backWheel)
     body.add(handlebar)

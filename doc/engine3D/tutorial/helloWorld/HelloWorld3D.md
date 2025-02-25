@@ -2,7 +2,9 @@
 
 At the end of this tutorial we will obtain a grey cube like :
 
-![Grey cube in 3D](engine_hello_world.png)
+![Grey cube in 3D](../../../../app/src/main/res/drawable/hello_world_3d.png)
+
+Sample code : [Engine3DHelloWorldComposable](../../../../app/src/main/java/fr/jhelp/tools/ui/composables/engine3d/Engine3DHelloWorldComposable.kt)
 
 Standard way to add the cube
 

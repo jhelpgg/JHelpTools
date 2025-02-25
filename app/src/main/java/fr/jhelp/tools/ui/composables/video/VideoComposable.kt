@@ -27,7 +27,7 @@ import fr.jhelp.tools.viewmodel.status.VideoStatus
 class VideoComposable
 {
     private val videoModel: VideoModel by injected<VideoModel>()
-    private val video = SourceRaw(R.raw.roule) //SourceAsset("video/roule.mp4")
+    private val video = SourceRaw(R.raw.roule)
 
     @Composable
     fun Show(modifier: Modifier)

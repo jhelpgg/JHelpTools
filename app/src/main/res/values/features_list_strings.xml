@@ -5,9 +5,15 @@
     <string name="features_list_item_video_title">Capture video images</string>
     <string name="features_list_item_video_description">Show images captured inside the video</string>
 
-    <string name="features_list_item_engine_3d_title">Engine 3D : Hello word</string>
-    <string name="features_list_item_engine_3d_description">Show engine 3D hello world</string>
+    <string name="features_list_item_engine_3d_title">Video on field</string>
+    <string name="features_list_item_engine_3d_description">Video played in 3D field</string>
 
     <string name="features_list_item_coloring_title">Color image</string>
     <string name="features_list_item_coloring_description">Color image by area</string>
+
+    <string name="features_list_item_hello_world_3d_title">Hello world 3D</string>
+    <string name="features_list_item_hello_world_3d_description">A simple grey box</string>
+
+    <string name="features_list_item_material_texture_title">Material and texture</string>
+    <string name="features_list_item_material_texture_description">Box with material and texture</string>
 </resources>

@@ -19,8 +19,12 @@ import fr.jhelp.tools.mathformal.dsl.cos
 import fr.jhelp.tools.mathformal.dsl.sin
 import fr.jhelp.tools.mathformal.dsl.times
 import fr.jhelp.tools.ui.theme.JHelpToolsTheme
+import fr.jhelp.tools.utilities.coroutine.whenValueMatchDo
+import fr.jhelp.tools.utilities.injector.injected
 import fr.jhelp.tools.utilities.math.PI_FLOAT
 import fr.jhelp.tools.utilities.source.SourceRaw
+import fr.jhelp.tools.viewmodel.shared.NavigationModel
+import fr.jhelp.tools.viewmodel.shared.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -28,6 +32,7 @@ import kotlinx.coroutines.launch
 
 class Engine3DComposable
 {
+    private val navigationModel: NavigationModel by injected<NavigationModel>()
     private val video = SourceRaw(R.raw.roule)
     private lateinit var textureVideo: TextureVideo
     private lateinit var animationPlayerMaterial: AnimationPlayer
@@ -70,6 +75,13 @@ class Engine3DComposable
         }
 
         LaunchedEffect(Unit) {
+            this@Engine3DComposable.navigationModel.status.whenValueMatchDo(
+                matchCondition = { navigationStatus -> navigationStatus.currentScreen != Screen.ENGINE3D },
+                action = { _ ->
+                    this@Engine3DComposable.textureVideo.stop()
+                    this@Engine3DComposable.animationPlayerMaterial.stop()
+                })
+
             CoroutineScope(Dispatchers.Default).launch {
                 delay(1024)
                 this@Engine3DComposable.textureVideo.play(this@Engine3DComposable.video)

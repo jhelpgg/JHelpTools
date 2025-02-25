@@ -6,6 +6,10 @@ Here we will learn how to change the color and put image on it.
 * [Material](#material) : Material description and creation
 * [Texture](#texture) : Create a texture
 
+![Cube with texture applied on its material](../../../../app/src/main/res/drawable/material_texture_palette.png)
+
+Sample code : [Engin3DMaterialComposable](../../../../app/src/main/java/fr/jhelp/tools/ui/composables/engine3d/Engin3DMaterialComposable.kt)
+
 ## Material
 
 A material describes how render a 3D object.
