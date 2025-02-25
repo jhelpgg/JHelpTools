@@ -18,6 +18,7 @@ class BoxUVCreator
 
     /**
      * Create a cross texture UV
+     * @see [CrossUV]
      */
     @BoxUvDSL
     fun cross(u1: Float = 1f / 3f, u2: Float = 2f / 3f,

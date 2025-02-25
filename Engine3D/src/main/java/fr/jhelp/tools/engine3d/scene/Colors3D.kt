@@ -1,5 +1,6 @@
 package fr.jhelp.tools.engine3d.scene
 
+import fr.jhelp.tools.utilities.image.ColorParts
 import fr.jhelp.tools.utilities.math.COLOR_AMBER_0300
 import fr.jhelp.tools.utilities.math.COLOR_AMBER_0500
 import fr.jhelp.tools.utilities.math.COLOR_AMBER_0700
@@ -248,3 +249,11 @@ val TEAL: Color3D = Color3D(COLOR_TEAL_0500)
 
 /** Dark teal color use in 3D */
 val DARK_TEAL: Color3D = Color3D(COLOR_TEAL_0700)
+
+val ColorParts.color3D: Color3D get() = Color3D(this.color)
+
+val Color3D.parts: ColorParts
+    get() = ColorParts((this.alpha * 255f).toInt(),
+                       (this.red * 255f).toInt(),
+                       (this.green * 255f).toInt(),
+                       (this.blue * 255f).toInt())

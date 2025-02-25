@@ -2,6 +2,8 @@ package fr.jhelp.tools.engine3d.dsl
 
 import fr.jhelp.tools.engine3d.animation.node.AnimationNodePositionKeyFrame
 import fr.jhelp.tools.engine3d.annotations.AnimationNodePositionKeyFrameDSL
+import fr.jhelp.tools.engine3d.annotations.KeyFrameDSL
+import fr.jhelp.tools.engine3d.annotations.KeyTimeDSL
 import fr.jhelp.tools.engine3d.scene.Node3D
 
 /**
@@ -17,7 +19,7 @@ class AnimationNodePositionKeyFrameCreator(node: Node3D)
      * @param keyTime Key time creator
      */
     @AnimationNodePositionKeyFrameDSL
-    fun time(keyTime: KeyTimeCreator.() -> Unit)
+    fun time(keyTime: @KeyTimeDSL KeyTimeCreator.() -> Unit)
     {
         val creator = KeyTimeCreator()
         creator.keyTime()
@@ -29,7 +31,7 @@ class AnimationNodePositionKeyFrameCreator(node: Node3D)
      * @param keyFrame Key frame creator
      */
     @AnimationNodePositionKeyFrameDSL
-    fun frame(keyFrame: KeyFrameCreator.() -> Unit)
+    fun frame(keyFrame: @KeyFrameDSL KeyFrameCreator.() -> Unit)
     {
         val creator = KeyFrameCreator()
         creator.keyFrame()
